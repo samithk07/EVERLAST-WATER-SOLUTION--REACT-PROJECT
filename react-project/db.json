@@ -1,0 +1,355 @@
+{
+  "users": [
+    {
+      "id": "1763984565491",
+      "username": "samith",
+      "email": "samithsamith677@gmail.com",
+      "password": "123456",
+      "createdAt": "2025-11-24T11:42:45.491Z"
+    },
+    {
+      "id": "1763984798594",
+      "username": "shahid",
+      "email": "shahid@gmail.com",
+      "password": "1234567890",
+      "createdAt": "2025-11-24T11:46:38.594Z"
+    },
+    {
+      "id": "1763985062764",
+      "username": "adnan",
+      "email": "adnan@email.com",
+      "password": "1234567",
+      "createdAt": "2025-11-24T11:51:02.764Z"
+    },
+    {
+      "id": "1763991765974",
+      "username": "adil",
+      "email": "adil@gmail.com",
+      "password": "123321",
+      "createdAt": "2025-11-24T13:42:45.974Z"
+    },
+    {
+      "id": "1763991860780",
+      "username": "adnan01",
+      "email": "adnan01@email.com",
+      "password": "123456",
+      "createdAt": "2025-11-24T13:44:20.780Z"
+    },
+    {
+      "id": "1763992849281",
+      "username": "kiran",
+      "email": "kiran@gmail.com",
+      "password": "543211",
+      "createdAt": "2025-11-24T14:00:49.281Z"
+    },
+    {
+      "id": "1764059790866",
+      "username": "boob",
+      "email": "boob@gmail.com",
+      "password": "123456",
+      "createdAt": "2025-11-25T08:36:30.866Z"
+    },
+    {
+      "id": "1764079238820",
+      "username": "demo",
+      "email": "demo@gmail.com",
+      "password": "123456",
+      "createdAt": "2025-11-25T14:00:38.820Z"
+    },
+    {
+      "id": "1764218581803",
+      "username": "demo1",
+      "email": "demo1@gmail.com",
+      "password": "123456",
+      "createdAt": "2025-11-27T04:43:01.803Z"
+    },
+    {
+      "id": "1764219290163",
+      "username": "samith",
+      "email": "samith@gmail.com",
+      "password": "123456",
+      "createdAt": "2025-11-27T04:54:50.163Z"
+    },
+    {
+      "id": "1764502594137",
+      "username": "sammi",
+      "email": "sammi@gmail.com",
+      "password": "As1234",
+      "createdAt": "2025-11-30T11:36:34.137Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "AquaFresh RO+UV+UF Purifier",
+      "price": 15999,
+      "originalPrice": 18999,
+      "rating": 4.5,
+      "reviews": 124,
+      "image": "src/assets/Products/Aqua gaurd water purifiers for health and wellness, drink RO, UV, TDS water with alkaline benifits.jpg",
+      "category": "ro",
+      "features": [
+        "7-stage purification",
+        "TDS Controller",
+        "Smart Display"
+      ],
+      "stock": 15
+    },
+    {
+      "id": "2",
+      "name": "PureFlow Mineral RO System",
+      "price": 12999,
+      "originalPrice": 14999,
+      "rating": 4.3,
+      "reviews": 89,
+      "image": "src/assets/Products/Aqua Nature Aqua Grand Plus Domestic Water Purifier RO 12Liter(RO+ LED UV+ COPPER WITH ALKALINE+ HIG.jpg",
+      "category": "ro",
+      "features": [
+        "Mineral Retention",
+        "Energy Saving",
+        "6L Storage"
+      ],
+      "stock": 8
+    },
+    {
+      "id": "3",
+      "name": "CleanWater UV Purifier",
+      "price": 8999,
+      "originalPrice": 10999,
+      "rating": 4.2,
+      "reviews": 67,
+      "image": "src/assets/Products/Aquaguard AMC Cost @9818865879.jpg",
+      "category": "uv",
+      "features": [
+        "UV Sterilization",
+        "5-stage Filtration",
+        "Wall Mountable"
+      ],
+      "stock": 12
+    },
+    {
+      "id": "4",
+      "name": "AquaGuard UF Water Filter",
+      "price": 6999,
+      "originalPrice": 8499,
+      "rating": 4,
+      "reviews": 45,
+      "image": "src/assets/Products/4.jpg",
+      "category": "uf",
+      "features": [
+        "UF Membrane",
+        "No Electricity",
+        "7L Capacity"
+      ],
+      "stock": 20
+    },
+    {
+      "id": "5",
+      "name": "SmartPure RO Digital",
+      "price": 21999,
+      "originalPrice": 25999,
+      "rating": 4.7,
+      "reviews": 156,
+      "image": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
+      "category": "ro",
+      "features": [
+        "WiFi Connected",
+        "Voice Control",
+        "8-stage Purification"
+      ],
+      "stock": 6
+    },
+    {
+      "id": "6",
+      "name": "EcoWater Gravity Filter",
+      "price": 4999,
+      "originalPrice": 6499,
+      "rating": 4.1,
+      "reviews": 78,
+      "image": "src/assets/Products/Best Alkaline Water Purifier in India.jpg",
+      "category": "gravity",
+      "features": [
+        "No Electricity",
+        "Portable",
+        "Ceramic Filter"
+      ],
+      "stock": 25
+    },
+    {
+      "id": "7",
+      "name": "AquaPro Alkaline RO",
+      "price": 17999,
+      "originalPrice": 20999,
+      "rating": 4.4,
+      "reviews": 92,
+      "image": "src/assets/Products/Faber Galaxy Plus RO+UV+UF+MAT Water Purifier.jpg",
+      "category": "ro",
+      "features": [
+        "Alkaline Water",
+        "pH Balance",
+        "Mineral Cartridge"
+      ],
+      "stock": 10
+    },
+    {
+      "id": "8",
+      "name": "PureDrops UV+UF Combo",
+      "price": 11999,
+      "originalPrice": 13999,
+      "rating": 4.3,
+      "reviews": 63,
+      "image": "src/assets/Products/How to Determine The Best Water Purifier for Getting Pure Water to Drink_.jpg",
+      "category": "uv",
+      "features": [
+        "Dual Protection",
+        "Compact Design",
+        "LED Indicator"
+      ],
+      "stock": 18
+    },
+    {
+      "id": "9",
+      "name": "WaterMax RO Commercial",
+      "price": 34999,
+      "originalPrice": 39999,
+      "rating": 4.6,
+      "reviews": 34,
+      "image": "src/assets/home1.jpg",
+      "category": "ro",
+      "features": [
+        "Commercial Grade",
+        "High Capacity",
+        "Stainless Steel"
+      ],
+      "stock": 4
+    },
+    {
+      "id": "10",
+      "name": "FreshFlow Countertop Filter",
+      "price": 7999,
+      "originalPrice": 9499,
+      "rating": 4.2,
+      "reviews": 87,
+      "image": "src/assets/home2.jpg",
+      "category": "gravity",
+      "features": [
+        "Space Saving",
+        "Easy Installation",
+        "3-stage Filter"
+      ],
+      "stock": 22
+    },
+    {
+      "id": "11",
+      "name": "AquaShield Pro RO+UV",
+      "price": 14999,
+      "originalPrice": 17999,
+      "rating": 4.5,
+      "reviews": 112,
+      "image": "src/assets/home3.jpg",
+      "category": "ro",
+      "features": [
+        "Advanced RO",
+        "UV Sterilization",
+        "Copper Charge"
+      ],
+      "stock": 14
+    },
+    {
+      "id": "12",
+      "name": "PureStream UF Purifier",
+      "price": 8499,
+      "originalPrice": 9999,
+      "rating": 4.1,
+      "reviews": 56,
+      "image": "src/assets/home4.jpg",
+      "category": "uf",
+      "features": [
+        "Hollow Fiber UF",
+        "Bacteria Removal",
+        "Low Maintenance"
+      ],
+      "stock": 16
+    },
+    {
+      "id": "13",
+      "name": "SmartAqua WiFi RO",
+      "price": 23999,
+      "originalPrice": 27999,
+      "rating": 4.8,
+      "reviews": 78,
+      "image": "src/assets/Products/product123.webp",
+      "category": "ro",
+      "features": [
+        "App Control",
+        "Water Quality Monitor",
+        "Auto Flush"
+      ],
+      "stock": 7
+    },
+    {
+      "id": "14",
+      "name": "EcoPure Gravity System",
+      "price": 5999,
+      "originalPrice": 7499,
+      "rating": 4,
+      "reviews": 45,
+      "image": "src/assets/Products/product12345.webp",
+      "category": "gravity",
+      "features": [
+        "Natural Filtration",
+        "8L Capacity",
+        "Silver Nano"
+      ],
+      "stock": 30
+    },
+    {
+      "id": "15",
+      "name": "AquaFresh Compact RO",
+      "price": 13999,
+      "originalPrice": 16999,
+      "rating": 4.4,
+      "reviews": 91,
+      "image": "src/assets/home3.jpg",
+      "category": "ro",
+      "features": [
+        "Compact Design",
+        "5-stage RO",
+        "TDS Control"
+      ],
+      "stock": 11
+    },
+    {
+      "id": "16",
+      "name": "PureFlow UV Sterilizer",
+      "price": 10999,
+      "originalPrice": 12999,
+      "rating": 4.2,
+      "reviews": 67,
+      "image": "src/assets/home1.jpg",
+      "category": "uv",
+      "features": [
+        "UV-C Technology",
+        "Multi-stage Filter",
+        "Child Lock"
+      ],
+      "stock": 13
+    }
+  ],
+  "cart": [
+    {
+      "id": "5314",
+      "productId": "9",
+      "userId": "1763984565491",
+      "userName": "samith",
+      "userEmail": "samithsamith677@gmail.com",
+      "productName": "WaterMax RO Commercial",
+      "productImage": "src/assets/home1.jpg",
+      "price": 34999,
+      "quantity": 1,
+      "category": "ro",
+      "stock": 4,
+      "addedAt": "2025-12-03T13:40:45.351Z"
+    }
+  ]
+}

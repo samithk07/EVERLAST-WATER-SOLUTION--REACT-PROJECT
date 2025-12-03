@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* Custom styles for form focus */
+:root {
+  --primary-color: #00A9FF;
+  --secondary-color: #89CFF3;
+  --accent-color: #A0E9FF;
+  --background-color: #CDF5FD;
+  --text-color: #0B0C10;
+  --error-color: #EF4444;
+  --success-color: #10B981;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+/* Add these animations to your global CSS file */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}

@@ -82,8 +82,23 @@ const Registration = () => {
             setServerError('')
             
             try {
-                const newUser = await registerUser(formData)
+                // First check if JSON Server is running
+                let serverAvailable = false;
+                try {
+                    await axios.get('http://localhost:3001/users', { timeout: 3000 });
+                    serverAvailable = true;
+                } catch (error) {
+                    console.log('JSON Server not available, using localStorage');
+                }
                 
+                let newUser;
+                
+                if (serverAvailable) {
+                    newUser = await registerUser(formData);
+                } else {
+                    newUser = await registerWithLocalStorage(formData);
+                }
+
                 // Use AuthContext login to automatically log the user in after registration
                 login({
                     id: newUser.id,
@@ -115,17 +130,24 @@ const Registration = () => {
     // Updated registerUser function to save to db.json
     const registerUser = async (userData) => {
         try {
+            console.log('Attempting to register user to JSON Server...');
+            
             // First, check if user already exists by fetching all users
-            const response = await axios.get('http://localhost:3001/users')
-            const existingUsers = response.data
+            const response = await axios.get('http://localhost:3001/users', {
+                timeout: 5000
+            });
+            
+            console.log('Fetched users from server:', response.data);
+            
+            const existingUsers = response.data || [];
             
             // Check if user already exists
             const userExists = existingUsers.find(user => 
                 user.email.toLowerCase() === userData.email.toLowerCase()
-            )
+            );
             
             if (userExists) {
-                throw new Error('User with this email already exists')
+                throw new Error('User with this email already exists');
             }
 
             // Create new user object
@@ -134,34 +156,42 @@ const Registration = () => {
                 username: userData.username,
                 email: userData.email,
                 password: userData.password,
-                createdAt: new Date().toISOString(),
-                cart: [] // Initialize empty cart
-            }
+                createdAt: new Date().toISOString()
+            };
+
+            console.log('Saving user to server:', newUser);
 
             // Save to db.json using POST request
-            const saveResponse = await axios.post('http://localhost:3001/users', newUser)
+            const saveResponse = await axios.post('http://localhost:3001/users', newUser, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            console.log('Server response:', saveResponse);
             
             if (saveResponse.status === 201) {
-                console.log('User saved to db.json successfully:', saveResponse.data)
-                return newUser
+                console.log('User saved to db.json successfully:', saveResponse.data);
+                return saveResponse.data; // Return the saved user data from server
             } else {
-                throw new Error('Failed to save user to database')
+                throw new Error('Failed to save user to database');
             }
 
         } catch (error) {
-            console.error('Registration API error:', error)
+            console.error('Registration API error:', error);
             
             if (error.response) {
                 // Server responded with error status
-                throw new Error(error.response.data.message || 'Registration failed')
+                console.error('Server error response:', error.response.data);
+                throw new Error(error.response.data.message || 'Registration failed');
             } else if (error.request) {
                 // Network error - couldn't reach the server
-                // Fallback to localStorage registration
-                console.log('JSON Server not available, falling back to localStorage registration')
-                return registerWithLocalStorage(userData)
+                console.error('Network error:', error.message);
+                throw new Error('Cannot connect to server. Please check if JSON Server is running on port 3001.');
             } else {
                 // Other errors
-                throw new Error(error.message || 'Registration failed')
+                console.error('Error:', error.message);
+                throw new Error(error.message || 'Registration failed');
             }
         }
     }
@@ -170,18 +200,20 @@ const Registration = () => {
     const registerWithLocalStorage = (userData) => {
         return new Promise((resolve, reject) => {
             try {
+                console.log('Registering user with localStorage...');
+                
                 // Get existing users from localStorage
-                const storedUsers = localStorage.getItem('registeredUsers')
-                const existingUsers = storedUsers ? JSON.parse(storedUsers) : []
+                const storedUsers = localStorage.getItem('registeredUsers');
+                const existingUsers = storedUsers ? JSON.parse(storedUsers) : [];
                 
                 // Check if user already exists
                 const userExists = existingUsers.find(user => 
                     user.email.toLowerCase() === userData.email.toLowerCase()
-                )
+                );
                 
                 if (userExists) {
-                    reject(new Error('User with this email already exists'))
-                    return
+                    reject(new Error('User with this email already exists'));
+                    return;
                 }
 
                 // Create new user object
@@ -190,74 +222,79 @@ const Registration = () => {
                     username: userData.username,
                     email: userData.email,
                     password: userData.password,
-                    createdAt: new Date().toISOString(),
-                    cart: []
-                }
+                    createdAt: new Date().toISOString()
+                };
 
                 // Save to localStorage
-                const updatedUsers = [...existingUsers, newUser]
-                localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers))
+                const updatedUsers = [...existingUsers, newUser];
+                localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
                 
-                console.log('User saved to localStorage successfully')
-                resolve(newUser)
+                console.log('User saved to localStorage successfully:', newUser);
+                
+                // Also save to users array in localStorage for backward compatibility
+                const allUsers = JSON.parse(localStorage.getItem('users')) || [];
+                allUsers.push(newUser);
+                localStorage.setItem('users', JSON.stringify(allUsers));
+                
+                resolve(newUser);
                 
             } catch (error) {
-                console.error('LocalStorage registration error:', error)
-                reject(new Error('Registration failed. Please try again.'))
+                console.error('LocalStorage registration error:', error);
+                reject(new Error('Registration failed. Please try again.'));
             }
-        })
+        });
     }
 
     const validateField = (fieldName, value) => {
         switch (fieldName) {
             case 'username':
-                if (!value.trim()) return "Username is required"
-                if (value.length < 3) return "Username must be at least 3 characters"
-                if (!/^[a-zA-Z0-9_]+$/.test(value)) return "Username can only contain letters, numbers and underscore"
-                return ''
+                if (!value.trim()) return "Username is required";
+                if (value.length < 3) return "Username must be at least 3 characters";
+                if (!/^[a-zA-Z0-9_]+$/.test(value)) return "Username can only contain letters, numbers and underscore";
+                return '';
             
             case 'email':
-                if (!value.trim()) return "Email is required"
-                if (!/\S+@\S+\.\S+/.test(value)) return "Email format is invalid"
-                return ''
+                if (!value.trim()) return "Email is required";
+                if (!/\S+@\S+\.\S+/.test(value)) return "Email format is invalid";
+                return '';
             
             case 'password':
-                if (!value.trim()) return "Password is required"
-                if (value.length < 6) return "Password must be at least 6 characters"
-                if (!/(?=.*[a-z])(?=.*[A-Z])/.test(value)) return "Password must contain at least one uppercase and one lowercase letter"
-                return ''
+                if (!value.trim()) return "Password is required";
+                if (value.length < 6) return "Password must be at least 6 characters";
+                if (!/(?=.*[a-z])(?=.*[A-Z])/.test(value)) return "Password must contain at least one uppercase and one lowercase letter";
+                return '';
             
             case 'confirmPassword':
-                if (!value.trim()) return "Please confirm your password"
-                if (value !== formData.password) return "Passwords do not match"
-                return ''
+                if (!value.trim()) return "Please confirm your password";
+                if (value !== formData.password) return "Passwords do not match";
+                return '';
             
             default:
-                return ''
+                return '';
         }
     }
 
     const validateForm = (data) => {
-        const errors = {}
+        const errors = {};
         
-        const usernameError = validateField('username', data.username)
-        if (usernameError) errors.username = usernameError
+        const usernameError = validateField('username', data.username);
+        if (usernameError) errors.username = usernameError;
 
-        const emailError = validateField('email', data.email)
-        if (emailError) errors.email = emailError
+        const emailError = validateField('email', data.email);
+        if (emailError) errors.email = emailError;
 
-        const passwordError = validateField('password', data.password)
-        if (passwordError) errors.password = passwordError
+        const passwordError = validateField('password', data.password);
+        if (passwordError) errors.password = passwordError;
 
-        const confirmPasswordError = validateField('confirmPassword', data.confirmPassword)
-        if (confirmPasswordError) errors.confirmPassword = confirmPasswordError
+        const confirmPasswordError = validateField('confirmPassword', data.confirmPassword);
+        if (confirmPasswordError) errors.confirmPassword = confirmPasswordError;
 
-        return errors
+        return errors;
     }
 
     // Check if field should show error
     const shouldShowError = (fieldName) => {
-        return touched[fieldName] && errors[fieldName]
+        return touched[fieldName] && errors[fieldName];
     }
 
     return (
@@ -282,7 +319,12 @@ const Registration = () => {
 
                 {serverError && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-                        {serverError}
+                        <strong>Error:</strong> {serverError}
+                        {serverError.includes('JSON Server') && (
+                            <div className="mt-2 text-xs">
+                                Please run: <code className="bg-gray-100 px-2 py-1 rounded">json-server --watch db.json --port 3001</code>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -395,7 +437,12 @@ const Registration = () => {
                                 : 'hover:transform hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-500/40'
                             }`}
                     >
-                        {isLoading ? 'Creating Account...' : 'Create Account'}
+                        {isLoading ? (
+                            <span className="flex items-center justify-center gap-2">
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                Creating Account...
+                            </span>
+                        ) : 'Create Account'}
                     </button>
                 </form>
 

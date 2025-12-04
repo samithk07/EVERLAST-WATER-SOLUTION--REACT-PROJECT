@@ -1,7 +1,8 @@
+// components/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext'; // Import the auth context
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [serverError, setServerError] = useState('');
     const navigate = useNavigate();
-    const { login } = useAuth(); // Get login function from auth context
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -42,22 +43,29 @@ const Login = () => {
             try {
                 const user = await loginUser(formData);
                 
-                // Use AuthContext login instead of directly setting localStorage
+                // Login with user data
                 login({
                     id: user.id,
                     email: user.email,
-                    username: user.username
+                    username: user.name || user.username,
+                    role: user.role || 'user' // Default to 'user' if role not specified
                 });
 
-                alert("Login successful!");
+                alert(`Login successful! Welcome ${user.role === 'admin' ? 'Admin' : 'User'}`);
                 
-                // Check if we need to redirect to checkout
-                const returnToCheckout = sessionStorage.getItem('returnToCheckout');
-                if (returnToCheckout) {
-                    sessionStorage.removeItem('returnToCheckout');
-                    navigate('/checkout');
+                // Redirect based on user role
+                if (user.role === 'admin') {
+                    // Redirect admin to admin dashboard
+                    navigate('/admin/dashboard');
                 } else {
-                    navigate('/home');
+                    // Regular user flow - check if need to redirect to checkout
+                    const returnToCheckout = sessionStorage.getItem('returnToCheckout');
+                    if (returnToCheckout) {
+                        sessionStorage.removeItem('returnToCheckout');
+                        navigate('/checkout');
+                    } else {
+                        navigate('/home');
+                    }
                 }
             } catch (error) {
                 setServerError(error.message);
@@ -82,7 +90,6 @@ const Login = () => {
                 }
 
                 const user = users[0];
-
 
                 if (user.password !== userData.password) {
                     throw new Error('Invalid password');
@@ -126,7 +133,13 @@ const Login = () => {
                         return;
                     }
 
-                    resolve(user);
+                    // Ensure role is set (default to 'user')
+                    const userWithRole = {
+                        ...user,
+                        role: user.role || 'user'
+                    };
+
+                    resolve(userWithRole);
                 })
                 .catch(() => {
                     // If db.json also fails, only use localStorage users
@@ -144,7 +157,13 @@ const Login = () => {
                         return;
                     }
 
-                    resolve(user);
+                    // Ensure role is set (default to 'user')
+                    const userWithRole = {
+                        ...user,
+                        role: user.role || 'user'
+                    };
+
+                    resolve(userWithRole);
                 });
         });
     };
@@ -165,8 +184,16 @@ const Login = () => {
         return errors;
     };
 
-    // Demo credentials for testing
-    const useDemoAccount = () => {
+    // Admin demo credentials
+    const useAdminDemo = () => {
+        setFormData({
+            email: 'admin@example.com',
+            password: 'admin123'
+        });
+    };
+
+    // User demo credentials
+    const useUserDemo = () => {
         setFormData({
             email: 'demo@example.com',
             password: 'demo123'
@@ -198,18 +225,7 @@ const Login = () => {
                     </div>
                 )}
 
-                {/* Demo Account Hint */}
-                {/* <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
-                    <p className="font-semibold">Demo Account:</p>
-                    <p>Email: demo@example.com</p>
-                    <p>Password: demo123</p>
-                    <button 
-                        onClick={useDemoAccount}
-                        className="mt-2 text-blue-600 font-medium hover:underline"
-                    >
-                        Use Demo Credentials
-                    </button>
-                </div> */}
+                
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Email Field */}
@@ -297,6 +313,14 @@ const Login = () => {
                             Sign up
                         </button>
                     </p>
+                    <div className="mt-4">
+                        <button
+                            onClick={() => navigate('/admin/login')}
+                            className="text-sm text-gray-600 hover:text-gray-800"
+                        >
+                            Admin Login
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

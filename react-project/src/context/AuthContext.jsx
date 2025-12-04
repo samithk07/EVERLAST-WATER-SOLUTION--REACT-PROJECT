@@ -1,3 +1,4 @@
+// contexts/AuthContext.js
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext();
@@ -14,8 +15,8 @@ export const AuthProvider = ({ children }) => {
         if (savedUser) {
           const userData = JSON.parse(savedUser);
           
-          // Validation
-          if (userData && typeof userData === 'object' && userData.id && userData.username) {
+          // Enhanced validation with role support
+          if (userData && typeof userData === 'object' && userData.id) {
             setUser(userData);
           } else {
             localStorage.removeItem('user');
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData) => {
-    if (userData && typeof userData === 'object' && userData.id && userData.username) {
+    if (userData && typeof userData === 'object' && userData.id) {
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
     } else {
@@ -53,7 +54,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAuthenticated = () => {
-    return !!(user && user.id && user.username);
+    return !!(user && user.id);
+  };
+
+  const isAdmin = () => {
+    return !!(user && user.role === 'admin');
   };
 
   const value = {
@@ -61,7 +66,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     loading,
-    isAuthenticated
+    isAuthenticated,
+    isAdmin
   };
 
   return (

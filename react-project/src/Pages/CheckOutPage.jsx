@@ -566,10 +566,10 @@ const CheckoutPage = () => {
     };
 
     // View order details
-    const handleViewOrders = () => {
-        setShowSuccessModal(false);
-        navigate('/orders');
-    };
+    // const handleViewOrders = () => {
+    //     setShowSuccessModal(false);
+    //     navigate('/cart');
+    // };
 
     // Check if all required fields are filled for delivery
     const isDeliveryComplete = () => {
@@ -1497,7 +1497,7 @@ const CheckoutPage = () => {
 
             {/* Success Modal */}
             {showSuccessModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 animate-fadeIn">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent bg-opacity-70 animate-fadeIn">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-100 animate-slideUp">
                         <div className="text-center">
                             {/* Success Icon */}
@@ -1539,7 +1539,7 @@ const CheckoutPage = () => {
                                 >
                                     Continue Shopping
                                 </button>
-                                <button
+                                {/* <button
                                     onClick={handleViewOrders}
                                     className="flex-1 py-3 px-4 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg border-2"
                                     style={{ 
@@ -1549,7 +1549,7 @@ const CheckoutPage = () => {
                                     }}
                                 >
                                     View Orders
-                                </button>
+                                </button> */}
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,6 @@
 module.exports = {
+    darkMode: 'class',
+
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
@@ -20,9 +22,14 @@ module.exports = {
           '100%': { transform: 'rotate(360deg)' },
         },
       },
+      
       animation: {
         'slide-in': 'slide-in 0.3s ease',
         'spin': 'spin 1s linear infinite',
+        'spin': 'spin 1s linear infinite',
+        'bounce': 'bounce 1s infinite',
+        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
       },
     },
   },

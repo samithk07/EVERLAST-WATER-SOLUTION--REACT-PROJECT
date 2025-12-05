@@ -212,7 +212,7 @@ const ProductsPage = () => {
     
     if (imgError || !src || !isValidImageUrl(src)) {
       return (
-        <div className={`${className} bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center`}>
+        <div className={`${className} bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center`}>
           <ImageIcon className="w-6 h-6 text-slate-400" />
         </div>
       );
@@ -328,7 +328,7 @@ const ProductsPage = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gradient-to-r from-[#00A9FF] to-[#89CFF3]">
+              <tr className="bg-linear-to-r from-[#00A9FF] to-[#89CFF3]">
                 <th className="text-left py-4 px-6 text-sm font-semibold text-white">Product</th>
                 <th className="text-left py-4 px-6 text-sm font-semibold text-white">Category</th>
                 <th className="text-left py-4 px-6 text-sm font-semibold text-white">Price</th>
@@ -340,7 +340,7 @@ const ProductsPage = () => {
               {filteredProducts.map((product) => (
                 <tr 
                   key={product.id} 
-                  className="border-b border-slate-100 hover:bg-gradient-to-r hover:from-[#A0E9FF]/20 hover:to-[#89CFF3]/20 transition-all duration-200 group"
+                  className="border-b border-slate-100 hover:bg-linear-to-r hover:from-[#A0E9FF]/20 hover:to-[#89CFF3]/20 transition-all duration-200 group"
                 >
                   <td className="py-4 px-6">
                     <div className="flex items-center">
@@ -415,7 +415,7 @@ const ProductsPage = () => {
         {/* Empty State */}
         {filteredProducts.length === 0 && !error && (
           <div className="text-center py-12 animate-fade-in">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-full bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-4">
               <Package size={24} className="text-slate-400" />
             </div>
             <h3 className="text-lg font-medium text-slate-800 mb-2">No products found</h3>

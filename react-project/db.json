@@ -12,21 +12,8 @@
       "username": "samith",
       "email": "samithsamith677@gmail.com",
       "password": "123456",
-      "createdAt": "2025-11-24T11:42:45.491Z"
-    },
-    {
-      "id": "1763984798594",
-      "username": "shahid",
-      "email": "shahid@gmail.com",
-      "password": "1234567890",
-      "createdAt": "2025-11-24T11:46:38.594Z"
-    },
-    {
-      "id": "1763985062764",
-      "username": "adnan",
-      "email": "adnan@email.com",
-      "password": "1234567",
-      "createdAt": "2025-11-24T11:51:02.764Z"
+      "createdAt": "2025-11-24T11:42:45.491Z",
+      "status": "active"
     },
     {
       "id": "1763991765974",
@@ -97,25 +84,30 @@
       "email": "poja@gmail.com",
       "password": "Pooja123",
       "createdAt": "2025-12-04T10:48:43.948Z"
+    },
+    {
+      "id": "1764910215336",
+      "username": "deelip",
+      "email": "deelip@gmail.com",
+      "password": "Deelip",
+      "createdAt": "2025-12-05T04:50:15.336Z"
+    },
+    {
+      "id": "1764913750981",
+      "username": "adil",
+      "email": "adil@gmail.cpom",
+      "password": "Adil.123",
+      "createdAt": "2025-12-05T05:49:10.981Z"
+    },
+    {
+      "id": "1764930328958",
+      "username": "adnan",
+      "email": "adnan@email.com",
+      "password": "Adnan123",
+      "createdAt": "2025-12-05T10:25:28.958Z"
     }
   ],
   "products": [
-    {
-      "id": "1",
-      "name": "AquaFresh RO+UV+UF Purifier",
-      "price": 15999,
-      "originalPrice": 18999,
-      "rating": 4.5,
-      "reviews": 124,
-      "image": "src/assets/Products/Aqua gaurd water purifiers for health and wellness, drink RO, UV, TDS water with alkaline benifits.jpg",
-      "category": "ro",
-      "features": [
-        "7-stage purification",
-        "TDS Controller",
-        "Smart Display"
-      ],
-      "stock": 15
-    },
     {
       "id": "2",
       "name": "PureFlow Mineral RO System",
@@ -130,7 +122,9 @@
         "Energy Saving",
         "6L Storage"
       ],
-      "stock": 8
+      "stock": 8,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.970Z"
     },
     {
       "id": "3",
@@ -146,7 +140,9 @@
         "5-stage Filtration",
         "Wall Mountable"
       ],
-      "stock": 12
+      "stock": 12,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.967Z"
     },
     {
       "id": "4",
@@ -162,7 +158,9 @@
         "No Electricity",
         "7L Capacity"
       ],
-      "stock": 20
+      "stock": 20,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.964Z"
     },
     {
       "id": "5",
@@ -178,7 +176,9 @@
         "Voice Control",
         "8-stage Purification"
       ],
-      "stock": 6
+      "stock": 6,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.971Z"
     },
     {
       "id": "6",
@@ -194,7 +194,9 @@
         "Portable",
         "Ceramic Filter"
       ],
-      "stock": 25
+      "stock": 25,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.968Z"
     },
     {
       "id": "7",
@@ -210,7 +212,9 @@
         "pH Balance",
         "Mineral Cartridge"
       ],
-      "stock": 10
+      "stock": 10,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.965Z"
     },
     {
       "id": "8",
@@ -226,7 +230,9 @@
         "Compact Design",
         "LED Indicator"
       ],
-      "stock": 18
+      "stock": 18,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.969Z"
     },
     {
       "id": "9",
@@ -242,7 +248,9 @@
         "High Capacity",
         "Stainless Steel"
       ],
-      "stock": 4
+      "stock": 4,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.971Z"
     },
     {
       "id": "10",
@@ -258,7 +266,9 @@
         "Easy Installation",
         "3-stage Filter"
       ],
-      "stock": 22
+      "stock": 22,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.969Z"
     },
     {
       "id": "11",
@@ -274,7 +284,9 @@
         "UV Sterilization",
         "Copper Charge"
       ],
-      "stock": 14
+      "stock": 14,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.966Z"
     },
     {
       "id": "12",
@@ -290,7 +302,9 @@
         "Bacteria Removal",
         "Low Maintenance"
       ],
-      "stock": 16
+      "stock": 16,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.970Z"
     },
     {
       "id": "13",
@@ -306,7 +320,9 @@
         "Water Quality Monitor",
         "Auto Flush"
       ],
-      "stock": 7
+      "stock": 7,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.971Z"
     },
     {
       "id": "14",
@@ -322,7 +338,9 @@
         "8L Capacity",
         "Silver Nano"
       ],
-      "stock": 30
+      "stock": 30,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.968Z"
     },
     {
       "id": "15",
@@ -338,331 +356,52 @@
         "5-stage RO",
         "TDS Control"
       ],
-      "stock": 11
+      "stock": 11,
+      "status": "inactive",
+      "lastUpdated": "2025-12-05T04:47:14.958Z"
     },
     {
-      "id": "8edb",
       "name": "Everlast Ro purifier",
       "category": "RO",
       "price": 13000,
       "stock": 12,
-      "image": "C:\\Users\\samit\\OneDrive\\Desktop\\React-Project\\react-project\\src\\assets\\home4.jpg",
-      "description": "Everlast own water purifier"
+      "image": "https://www.lg.com/content/dam/channel/wcms/in/waterpurifiers/category-page-banner/WPR-Steel-Bottle-Banner-720x960-M-v2.jpg",
+      "description": "Everlast own water purifier",
+      "id": "8edb"
+    },
+    {
+      "id": "2b7d",
+      "name": "LG Mineral Booster Water Purifier",
+      "category": "UV",
+      "price": 12000,
+      "stock": 12,
+      "image": "https://www.lg.com/content/dam/channel/wcms/in/images/water-purifiers/ww146rplc/gallery/WW146RPLC-450.jpg",
+      "description": "LG 8L RO+UV+Mineral Booster Water Purifier with Steel Tank, Crimson Red\n"
+    },
+    {
+      "id": "2b33",
+      "name": "LG Mineral Booster Water Purifier",
+      "category": "Gravity",
+      "price": 10000,
+      "stock": 12,
+      "image": "https://4.imimg.com/data4/PK/HO/GLADMIN-182124/lg-water-purifiers-500x500.png",
+      "description": "Wall Mount Lg Ro Water Purifiers, 5-10 Litres"
     }
   ],
-  "cart": [
-    {
-      "id": "90d9",
-      "productId": "5",
-      "userId": "1763984565491",
-      "userName": "samith",
-      "userEmail": "samithsamith677@gmail.com",
-      "productName": "SmartPure RO Digital",
-      "productImage": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
-      "price": 21999,
-      "quantity": 1,
-      "category": "ro",
-      "stock": 6,
-      "addedAt": "2025-12-03T14:10:02.191Z"
-    },
-    {
-      "id": "90ba",
-      "productId": "5",
-      "userId": "1763984565491",
-      "userName": "samith",
-      "userEmail": "samithsamith677@gmail.com",
-      "productName": "SmartPure RO Digital",
-      "productImage": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
-      "price": 21999,
-      "quantity": 1,
-      "category": "ro",
-      "stock": 6,
-      "addedAt": "2025-12-03T14:13:06.019Z"
-    },
-    {
-      "id": "ffb7",
-      "productId": "9",
-      "userId": "1763984565491",
-      "userName": "samith",
-      "userEmail": "samithsamith677@gmail.com",
-      "productName": "WaterMax RO Commercial",
-      "productImage": "src/assets/home1.jpg",
-      "price": 34999,
-      "quantity": 1,
-      "category": "ro",
-      "stock": 4,
-      "addedAt": "2025-12-03T14:13:07.012Z"
-    },
-    {
-      "id": "f697",
-      "productId": "9",
-      "userId": "1763984565491",
-      "userName": "samith",
-      "userEmail": "samithsamith677@gmail.com",
-      "productName": "WaterMax RO Commercial",
-      "productImage": "src/assets/home1.jpg",
-      "price": 34999,
-      "quantity": 1,
-      "category": "ro",
-      "stock": 4,
-      "addedAt": "2025-12-04T05:20:20.132Z"
-    },
-    {
-      "id": "4e1e",
-      "productId": "5",
-      "userId": "1",
-      "userName": "Samith",
-      "userEmail": "samith677@gmail.com",
-      "productName": "SmartPure RO Digital",
-      "productImage": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
-      "price": 21999,
-      "quantity": 1,
-      "category": "ro",
-      "stock": 6,
-      "addedAt": "2025-12-04T10:48:55.007Z"
-    },
-    {
-      "id": "7127",
-      "productId": "13",
-      "userId": "1",
-      "userName": "Samith",
-      "userEmail": "samith677@gmail.com",
-      "productName": "SmartAqua WiFi RO",
-      "productImage": "src/assets/Products/product123.webp",
-      "price": 23999,
-      "quantity": 1,
-      "category": "ro",
-      "stock": 7,
-      "addedAt": "2025-12-04T10:48:56.233Z"
-    }
-  ],
+  "cart": [],
   "orders": [
     {
-      "id": "ORD1764773174935731",
-      "userId": "1764771942650",
-      "userName": "gopal",
-      "userEmail": "gopal@gmail.com",
+      "id": "ORD1764935602319616",
+      "userId": "1",
+      "userName": "Samith",
+      "userEmail": "samith677@gmail.com",
       "deliveryAddress": {
-        "fullName": "gopal",
-        "phoneNumber": "9656567901",
-        "email": "gopal@gmail.com",
+        "fullName": "Samith",
+        "phoneNumber": "8078332452",
+        "email": "samith677@gmail.com",
         "addressLine1": "Koppal,muttamgate,shiriya,kumbala",
         "addressLine2": "",
         "city": "Bandiyod",
-        "state": "Kerala",
-        "pincode": "671322",
-        "country": "India"
-      },
-      "items": [
-        {
-          "productId": "5",
-          "productName": "SmartPure RO Digital",
-          "productImage": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
-          "price": 21999,
-          "quantity": 1,
-          "total": 21999
-        },
-        {
-          "productId": "13",
-          "productName": "SmartAqua WiFi RO",
-          "productImage": "src/assets/Products/product123.webp",
-          "price": 23999,
-          "quantity": 1,
-          "total": 23999
-        },
-        {
-          "productId": "3",
-          "productName": "CleanWater UV Purifier",
-          "productImage": "src/assets/Products/Aquaguard AMC Cost @9818865879.jpg",
-          "price": 8999,
-          "quantity": 1,
-          "total": 8999
-        }
-      ],
-      "subtotal": 54997,
-      "shipping": 0,
-      "tax": 9899.46,
-      "total": 64896.46,
-      "paymentMethod": "upi",
-      "paymentDetails": {
-        "upiId": "samithsamith677-1@okicici"
-      },
-      "status": "confirmed",
-      "orderDate": "2025-12-03T14:46:14.935Z",
-      "estimatedDelivery": "2025-12-10T14:46:14.935Z"
-    },
-    {
-      "id": "ORD1764825654431559",
-      "userId": "1763984565491",
-      "userName": "samith",
-      "userEmail": "samithsamith677@gmail.com",
-      "deliveryAddress": {
-        "fullName": "samith",
-        "phoneNumber": "8078332452",
-        "email": "samithsamith677@gmail.com",
-        "addressLine1": "Koppal,muttamgate,shiriya,kumbala",
-        "addressLine2": "",
-        "city": "Bandiyod",
-        "state": "Kerala",
-        "pincode": "671322",
-        "country": "India"
-      },
-      "items": [
-        {
-          "productId": "5",
-          "productName": "SmartPure RO Digital",
-          "productImage": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
-          "price": 21999,
-          "quantity": 1,
-          "total": 21999
-        },
-        {
-          "productId": "9",
-          "productName": "WaterMax RO Commercial",
-          "productImage": "src/assets/home1.jpg",
-          "price": 34999,
-          "quantity": 1,
-          "total": 34999
-        }
-      ],
-      "subtotal": 56998,
-      "shipping": 0,
-      "tax": 10259.64,
-      "total": 67257.64,
-      "paymentMethod": "upi",
-      "paymentDetails": {
-        "upiId": "samithsamith677-1@okicici"
-      },
-      "status": "confirmed",
-      "orderDate": "2025-12-04T05:20:54.431Z",
-      "estimatedDelivery": "2025-12-11T05:20:54.431Z"
-    },
-    {
-      "id": "ORD1764825705198343",
-      "userId": "1763984565491",
-      "userName": "samith",
-      "userEmail": "samithsamith677@gmail.com",
-      "deliveryAddress": {
-        "fullName": "samith",
-        "phoneNumber": "8078332452",
-        "email": "samithsamith677@gmail.com",
-        "addressLine1": "Koppal,muttamgate,shiriya,kumbala",
-        "addressLine2": "",
-        "city": "Bandiyod",
-        "state": "Kerala",
-        "pincode": "671322",
-        "country": "India"
-      },
-      "items": [
-        {
-          "productId": "5",
-          "productName": "SmartPure RO Digital",
-          "productImage": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
-          "price": 21999,
-          "quantity": 1,
-          "total": 21999
-        }
-      ],
-      "subtotal": 21999,
-      "shipping": 0,
-      "tax": 3959.8199999999997,
-      "total": 25958.82,
-      "paymentMethod": "upi",
-      "paymentDetails": {
-        "upiId": "samithsamith677-1@okicici"
-      },
-      "status": "confirmed",
-      "orderDate": "2025-12-04T05:21:45.198Z",
-      "estimatedDelivery": "2025-12-11T05:21:45.198Z"
-    },
-    {
-      "id": "ORD1764825802273807",
-      "userId": "1763984565491",
-      "userName": "samith",
-      "userEmail": "samithsamith677@gmail.com",
-      "deliveryAddress": {
-        "fullName": "samith",
-        "phoneNumber": "8078332452",
-        "email": "samithsamith677@gmail.com",
-        "addressLine1": "Koppal,muttamgate,shiriya,kumbala",
-        "addressLine2": "",
-        "city": "Bandiyod",
-        "state": "Kerala",
-        "pincode": "671322",
-        "country": "India"
-      },
-      "items": [
-        {
-          "productId": "9",
-          "productName": "WaterMax RO Commercial",
-          "productImage": "src/assets/home1.jpg",
-          "price": 34999,
-          "quantity": 1,
-          "total": 34999
-        }
-      ],
-      "subtotal": 34999,
-      "shipping": 0,
-      "tax": 6299.82,
-      "total": 41298.82,
-      "paymentMethod": "upi",
-      "paymentDetails": {
-        "upiId": "samithsamith677-1@okicici"
-      },
-      "status": "confirmed",
-      "orderDate": "2025-12-04T05:23:22.273Z",
-      "estimatedDelivery": "2025-12-11T05:23:22.273Z"
-    },
-    {
-      "id": "ORD1764825949780117",
-      "userId": "1763984565491",
-      "userName": "samith",
-      "userEmail": "samithsamith677@gmail.com",
-      "deliveryAddress": {
-        "fullName": "samith",
-        "phoneNumber": "8078332452",
-        "email": "samithsamith677@gmail.com",
-        "addressLine1": "Koppal,muttamgate,shiriya,kumbala",
-        "addressLine2": "",
-        "city": "Bandiyod",
-        "state": "Kerala",
-        "pincode": "671322",
-        "country": "India"
-      },
-      "items": [
-        {
-          "productId": "5",
-          "productName": "SmartPure RO Digital",
-          "productImage": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
-          "price": 21999,
-          "quantity": 1,
-          "total": 21999
-        }
-      ],
-      "subtotal": 21999,
-      "shipping": 0,
-      "tax": 3959.8199999999997,
-      "total": 25958.82,
-      "paymentMethod": "upi",
-      "paymentDetails": {
-        "upiId": "samithsamith677-1@okicici"
-      },
-      "status": "confirmed",
-      "orderDate": "2025-12-04T05:25:49.780Z",
-      "estimatedDelivery": "2025-12-11T05:25:49.780Z"
-    },
-    {
-      "id": "ORD1764845498074265",
-      "userId": "1764845323948",
-      "userName": "pooja",
-      "userEmail": "poja@gmail.com",
-      "deliveryAddress": {
-        "fullName": "pooja",
-        "phoneNumber": "8078332452",
-        "email": "poja@gmail.com",
-        "addressLine1": "kumbala",
-        "addressLine2": "",
-        "city": "mavinadi",
         "state": "Kerala",
         "pincode": "671322",
         "country": "India"
@@ -691,11 +430,51 @@
       "total": 54277.64,
       "paymentMethod": "upi",
       "paymentDetails": {
-        "upiId": "pooja-1@okicici"
+        "upiId": "samithsamith677-1@okicici"
+      },
+      "status": "shipped",
+      "orderDate": "2025-12-05T11:53:22.319Z",
+      "estimatedDelivery": "2025-12-12T11:53:22.319Z",
+      "updatedAt": "2025-12-05T12:13:08.121Z"
+    },
+    {
+      "id": "ORD1764936753895816",
+      "userId": "1",
+      "userName": "Samith",
+      "userEmail": "samith677@gmail.com",
+      "deliveryAddress": {
+        "fullName": "Samith",
+        "phoneNumber": "8078332452",
+        "email": "samith677@gmail.com",
+        "addressLine1": "Koppal,muttamgate,shiriya,kumbala",
+        "addressLine2": "",
+        "city": "Bandiyod",
+        "state": "Kerala",
+        "pincode": "671322",
+        "country": "India"
+      },
+      "items": [
+        {
+          "productId": "5",
+          "productName": "SmartPure RO Digital",
+          "productImage": "src/assets/Products/Aquaguard Service in New Delhi @7065012902.jpg",
+          "price": 21999,
+          "quantity": 1,
+          "total": 21999
+        }
+      ],
+      "subtotal": 21999,
+      "shipping": 0,
+      "tax": 3959.8199999999997,
+      "total": 25958.82,
+      "paymentMethod": "upi",
+      "paymentDetails": {
+        "upiId": "samithsamith677-1@okicici"
       },
       "status": "confirmed",
-      "orderDate": "2025-12-04T10:51:38.074Z",
-      "estimatedDelivery": "2025-12-11T10:51:38.074Z"
+      "orderDate": "2025-12-05T12:12:33.895Z",
+      "estimatedDelivery": "2025-12-12T12:12:33.895Z"
     }
-  ]
+  ],
+  "notifications": []
 }

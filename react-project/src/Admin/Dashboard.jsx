@@ -1,6 +1,7 @@
 // Admin/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Package, ShoppingBag, Users, DollarSign, TrendingUp, Activity, Clock, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Package, ShoppingBag, Users, IndianRupee , TrendingUp, Activity, Clock } from 'lucide-react';
 
 const API_BASE = 'http://localhost:3001';
 
@@ -13,6 +14,7 @@ const DashboardPage = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboardData();
@@ -50,6 +52,27 @@ const DashboardPage = () => {
       console.error('Dashboard data error:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Quick action handlers
+  const handleQuickAction = (action) => {
+    switch(action) {
+      
+      case 'viewProducts':
+        navigate('/admin/products');
+        break;
+      case 'viewOrders':
+        navigate('/admin/orders');
+        break;
+      case 'manageUsers':
+        navigate('/admin/users');
+        break;
+      case 'viewCategories':
+        navigate('/admin/categories');
+        break;
+      default:
+        break;
     }
   };
 
@@ -91,12 +114,43 @@ const DashboardPage = () => {
       id: 4,
       title: 'Total Revenue',
       value: `₹${stats.revenue.toLocaleString()}`,
-      icon: <DollarSign size={24} />,
+      icon: <IndianRupee size={24} />,
       color: 'text-[#00A9FF]',
       bgColor: 'bg-[#00A9FF]/10',
       borderColor: 'border-[#00A9FF]/20',
       change: '+23%',
       changeColor: 'text-green-600'
+    }
+  ];
+
+  const quickActions = [
+   
+    {
+      id: 2,
+      title: 'View Products',
+      description: 'Browse all products',
+      icon: <Package size={18} />,
+      action: 'viewProducts',
+      color: 'text-green-600',
+      bgColor: 'bg-green-100'
+    },
+    {
+      id: 3,
+      title: 'View Orders',
+      description: 'Check recent orders',
+      icon: <ShoppingBag size={18} />,
+      action: 'viewOrders',
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-100'
+    },
+    {
+      id: 4,
+      title: 'Manage Users',
+      description: 'User accounts',
+      icon: <Users size={18} />,
+      action: 'manageUsers',
+      color: 'text-amber-600',
+      bgColor: 'bg-amber-100'
     }
   ];
 
@@ -238,59 +292,32 @@ const DashboardPage = () => {
 
         {/* Right Column */}
         <div className="space-y-6">
-          {/* System Info */}
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">System Information</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 border-b border-slate-100">
-                <span className="text-sm text-slate-600">Environment</span>
-                <span className="text-sm font-medium text-slate-800">Development</span>
-              </div>
-              <div className="flex justify-between items-center p-3 border-b border-slate-100">
-                <span className="text-sm text-slate-600">API Endpoint</span>
-                <span className="text-sm font-medium text-slate-800">localhost:3001</span>
-              </div>
-              <div className="flex justify-between items-center p-3 border-b border-slate-100">
-                <span className="text-sm text-slate-600">Database</span>
-                <span className="text-sm font-medium text-slate-800">JSON Server</span>
-              </div>
-              <div className="flex justify-between items-center p-3">
-                <span className="text-sm text-slate-600">Last Refresh</span>
-                <span className="text-sm font-medium text-slate-800">Just now</span>
-              </div>
-            </div>
-          </div>
-
           {/* Quick Actions */}
           <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">Quick Actions</h3>
             <div className="space-y-3">
-              <button className="w-full flex items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 text-left transition-colors">
-                <Package size={18} className="text-[#00A9FF] mr-3" />
-                <div>
-                  <p className="text-sm font-medium text-slate-800">Add Product</p>
-                  <p className="text-xs text-slate-500">Create new listing</p>
-                </div>
-              </button>
-              <button className="w-full flex items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 text-left transition-colors">
-                <ShoppingBag size={18} className="text-[#00A9FF] mr-3" />
-                <div>
-                  <p className="text-sm font-medium text-slate-800">View Orders</p>
-                  <p className="text-xs text-slate-500">Check recent orders</p>
-                </div>
-              </button>
-              <button className="w-full flex items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 text-left transition-colors">
-                <Users size={18} className="text-[#00A9FF] mr-3" />
-                <div>
-                  <p className="text-sm font-medium text-slate-800">Manage Users</p>
-                  <p className="text-xs text-slate-500">User accounts</p>
-                </div>
-              </button>
+              {quickActions.map((action) => (
+                <button
+                  key={action.id}
+                  onClick={() => handleQuickAction(action.action)}
+                  className="w-full flex items-center p-3 border border-slate-200 rounded-lg hover:bg-slate-50 text-left transition-colors hover:shadow-sm group"
+                >
+                  <div className={`p-2 rounded-lg ${action.bgColor} mr-3 group-hover:scale-110 transition-transform`}>
+                    <div className={action.color}>
+                      {action.icon}
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-slate-800">{action.title}</p>
+                    <p className="text-xs text-slate-500">{action.description}</p>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Stats Summary */}
-          <div className="bg-gradient-to-r from-[#00A9FF] to-[#89CFF3] rounded-xl shadow-sm p-6 text-white">
+          <div className="bg-linear-to-r from-[#00A9FF] to-[#89CFF3] rounded-xl shadow-sm p-6 text-white">
             <h3 className="text-lg font-semibold mb-4">Stats Summary</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -298,7 +325,7 @@ const DashboardPage = () => {
                 <span className="text-sm font-bold">{stats.products}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm">Orders Today</span>
+                <span className="text-sm">Total Orders</span>
                 <span className="text-sm font-bold">{stats.orders}</span>
               </div>
               <div className="flex items-center justify-between">
@@ -311,6 +338,9 @@ const DashboardPage = () => {
               </div>
             </div>
           </div>
+
+          {/* Refresh Button */}
+          
         </div>
       </div>
     </div>

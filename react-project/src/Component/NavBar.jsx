@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, User, LogOut, X, Home, Info, Phone, LogIn, UserPlus, Menu, Droplets } from "lucide-react";
+import { ShoppingCart, User, LogOut, X, Home, Info,Package , LogIn, UserPlus, Menu, Droplets } from "lucide-react";
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext'; // Import AuthContext
 
@@ -67,6 +67,7 @@ const Navbar = () => {
         { path: '/home', icon: Home, label: 'Home', showWhenLoggedIn: true },
         { path: '/about', icon: Info, label: 'About Us', showWhenLoggedIn: true },
         { path: '/watertest', icon: Droplets, label: 'Water Test', showWhenLoggedIn: true },
+        { path: '/order/:orderId', icon: Package , label: 'Orders', showWhenLoggedIn: true },
     ];
 
     const filteredMenuItems = menuItems.filter(item => 

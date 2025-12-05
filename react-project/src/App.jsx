@@ -8,6 +8,7 @@ import Services from './Pages/Services'
 import About from './Pages/About'
 import UserPage from './Pages/UserPage'
 import CartPage from './Pages/CartPage'
+import ViewOrders from './Pages/ViewOrders'
 import ProductsPage from './Pages/Products'
 import CheckoutPage from './Pages/CheckOutPage'
 import { AuthProvider } from './context/AuthContext'
@@ -36,6 +37,7 @@ function App() {
             <Route path='/about' element={<About/>} />
             <Route path='/products' element={<ProductsPage/>} />
             <Route path='/checkout' element={<CheckoutPage/>} />
+<Route path="/order/:orderId" element={<ViewOrders   />} />
             
             {/* Protected User Routes */}
             <Route path='/userpage' element={<UserPage/>} />

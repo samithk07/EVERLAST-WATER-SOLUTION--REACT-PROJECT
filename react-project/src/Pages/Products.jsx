@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Star, Search, ShoppingCart, Loader2, AlertCircle, Filter, TrendingUp, Shield, Zap, Battery, Droplets } from 'lucide-react';
 import Footer from '../Component/Footer';
-import Navbar from '../Component/NavBar';
+import Navbar from '../Component/Navbar'; // Fixed: Ensure filename matches
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
@@ -18,6 +18,9 @@ const ProductsPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [addingToCart, setAddingToCart] = useState({});
+
+    // Use the same API_BASE as your admin panel
+    const API_BASE = 'http://localhost:3001';
 
     const colors = {
         primary: '#00A9FF',
@@ -43,26 +46,37 @@ const ProductsPage = () => {
         const fetchProducts = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('/db.json');
+                // Try JSON Server endpoint first
+                const response = await fetch(`${API_BASE}/products`);
                 
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch products: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.products && Array.isArray(data.products)) {
-                    setProducts(data.products);
-                } else if (Array.isArray(data)) {
-                    setProducts(data);
+                    // If JSON Server fails, try local db.json
+                    console.warn('JSON Server not running, trying local db.json');
+                    const localResponse = await fetch('/db.json');
+                    
+                    if (!localResponse.ok) {
+                        throw new Error('Failed to fetch products from both sources');
+                    }
+                    
+                    const data = await localResponse.json();
+                    
+                    if (data.products && Array.isArray(data.products)) {
+                        setProducts(data.products);
+                    } else if (Array.isArray(data)) {
+                        setProducts(data);
+                    } else {
+                        throw new Error('Invalid data format in db.json');
+                    }
                 } else {
-                    throw new Error('Invalid data format in db.json');
+                    // JSON Server is working
+                    const data = await response.json();
+                    setProducts(data);
                 }
                 
                 setError(null);
             } catch (err) {
                 console.error('Error loading products:', err);
-                setError('Failed to load products. Please check db.json file.');
+                setError('Failed to load products. Please check if JSON Server is running on port 3001.');
                 
                 // Fallback products
                 const fallbackProducts = [
@@ -97,6 +111,38 @@ const ProductsPage = () => {
                         warranty: '3 Years',
                         capacity: '8 LPH',
                         color: 'Pearl White'
+                    },
+                    {
+                        id: 'p003',
+                        name: 'AquaGuard UF Water Purifier',
+                        category: 'uf',
+                        price: 8999,
+                        originalPrice: 10999,
+                        image: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=300&fit=crop',
+                        rating: 4.2,
+                        reviews: 156,
+                        stock: 8,
+                        features: ['UF membrane', 'No electricity', 'No wastage', '6L capacity'],
+                        description: 'Ultra filtration system that works without electricity and produces zero water wastage.',
+                        warranty: '2 Years',
+                        capacity: '6 LPH',
+                        color: 'Blue'
+                    },
+                    {
+                        id: 'p004',
+                        name: 'Gravity Pure Water Filter',
+                        category: 'gravity',
+                        price: 4999,
+                        originalPrice: 5999,
+                        image: 'https://images.unsplash.com/photo-1520218508822-998633d997e6?w=400&h=300&fit=crop',
+                        rating: 4.0,
+                        reviews: 210,
+                        stock: 30,
+                        features: ['Gravity based', 'No electricity', 'Ceramic filter', '20L capacity'],
+                        description: 'Simple gravity-based water filter perfect for areas with frequent power cuts.',
+                        warranty: '1 Year',
+                        capacity: '20L',
+                        color: 'White'
                     }
                 ];
                 setProducts(fallbackProducts);
@@ -106,7 +152,7 @@ const ProductsPage = () => {
         };
 
         fetchProducts();
-    }, []);
+    }, [API_BASE]);
 
     const handleAddToCart = async (product) => {
         console.log('Add to cart clicked for product:', product);
@@ -262,7 +308,7 @@ const ProductsPage = () => {
         const isInCart = cartQuantity > 0;
         
         return (
-            <div className="group relative bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 flex flex-col">
+            <div className="group relative bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 flex flex-col h-full">
                 {/* Product Image */}
                 <div className="relative overflow-hidden bg-gray-50 p-4">
                     <div className="relative h-40 w-full">
@@ -302,7 +348,7 @@ const ProductsPage = () => {
                 </div>
 
                 {/* Product Info */}
-                <div className="p-4 flex flex-col grow">
+                <div className="p-4 flex flex-col flex-grow">
                     {/* Category */}
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-medium text-gray-500 uppercase">
@@ -385,7 +431,7 @@ const ProductsPage = () => {
                                 className={`
                                     px-3 py-2 text-xs font-medium rounded-md transition-colors
                                     disabled:opacity-50 disabled:cursor-not-allowed
-                                    flex items-center gap-1.5
+                                    flex items-center gap-1.5 min-w-[100px]
                                 `}
                                 style={product.stock === 0 || isAdding ? { 
                                     backgroundColor: '#9CA3AF', 
@@ -570,14 +616,14 @@ const ProductsPage = () => {
                     )}
 
                     {/* Products Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                        {filteredProducts.map(product => 
-                            <ProductCardGrid key={product.id} product={product} />
-                        )}
-                    </div>
-
-                    {/* Empty State */}
-                    {filteredProducts.length === 0 && (
+                    {filteredProducts.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                            {filteredProducts.map(product => 
+                                <ProductCardGrid key={product.id} product={product} />
+                            )}
+                        </div>
+                    ) : (
+                        /* Empty State */
                         <div className="text-center py-12">
                             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Search size={24} className="text-gray-400" />

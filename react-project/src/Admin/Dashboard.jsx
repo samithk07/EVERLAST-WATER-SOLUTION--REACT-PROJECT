@@ -68,9 +68,7 @@ const DashboardPage = () => {
       case 'manageUsers':
         navigate('/admin/users');
         break;
-      case 'viewCategories':
-        navigate('/admin/categories');
-        break;
+      
       default:
         break;
     }

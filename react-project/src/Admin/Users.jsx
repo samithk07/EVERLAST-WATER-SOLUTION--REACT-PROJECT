@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Users, UserCheck, UserX, Mail, Phone, Calendar, 
-  MoreVertical, Search, Filter, Eye, Edit2, Trash2,
-  ChevronLeft, ChevronRight, Plus, Download, RefreshCw,
-  Check, X, Shield, User, Save
+  Search, Lock, Unlock,
+  ChevronLeft, ChevronRight, Plus, RefreshCw,
+  Shield, User, Download, Filter
 } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,9 +21,6 @@ const UsersPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10);
-  const [editingUser, setEditingUser] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [newUser, setNewUser] = useState({
     name: '',
@@ -34,13 +31,23 @@ const UsersPage = () => {
     createdAt: new Date().toISOString().split('T')[0]
   });
 
+  const [advancedFilters, setAdvancedFilters] = useState({
+    dateFrom: '',
+    dateTo: '',
+    sortBy: 'id',
+    sortOrder: 'desc'
+  });
+  const [showBlockModal, setShowBlockModal] = useState(false);
+  const [userToBlock, setUserToBlock] = useState(null);
+  const [blockAction, setBlockAction] = useState(''); // 'block' or 'unblock'
+
   useEffect(() => {
     fetchUsers();
   }, []);
 
   useEffect(() => {
     filterUsers();
-  }, [users, searchTerm, roleFilter, statusFilter]);
+  }, [users, searchTerm, roleFilter, statusFilter, advancedFilters]);
 
   const fetchUsers = async () => {
     try {
@@ -90,6 +97,57 @@ const UsersPage = () => {
       );
     }
 
+    // Date filter
+    if (advancedFilters.dateFrom) {
+      const dateFrom = new Date(advancedFilters.dateFrom);
+      filtered = filtered.filter(user => {
+        const userDate = new Date(user.createdAt);
+        return userDate >= dateFrom;
+      });
+    }
+
+    if (advancedFilters.dateTo) {
+      const dateTo = new Date(advancedFilters.dateTo);
+      dateTo.setHours(23, 59, 59, 999); // End of the day
+      filtered = filtered.filter(user => {
+        const userDate = new Date(user.createdAt);
+        return userDate <= dateTo;
+      });
+    }
+
+    // Sorting
+    filtered.sort((a, b) => {
+      let aValue, bValue;
+      
+      switch (advancedFilters.sortBy) {
+        case 'name':
+          aValue = a.name?.toLowerCase() || '';
+          bValue = b.name?.toLowerCase() || '';
+          break;
+        case 'email':
+          aValue = a.email?.toLowerCase() || '';
+          bValue = b.email?.toLowerCase() || '';
+          break;
+        case 'createdAt':
+          aValue = new Date(a.createdAt);
+          bValue = new Date(b.createdAt);
+          break;
+        case 'role':
+          aValue = a.role?.toLowerCase() || '';
+          bValue = b.role?.toLowerCase() || '';
+          break;
+        default:
+          aValue = a.id;
+          bValue = b.id;
+      }
+
+      if (advancedFilters.sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+
     setFilteredUsers(filtered);
     setCurrentPage(1); // Reset to first page when filters change
   };
@@ -98,83 +156,74 @@ const UsersPage = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleEdit = (user) => {
-    setEditingUser({ ...user });
+  const handleBlockUser = (user, action) => {
+    setUserToBlock(user);
+    setBlockAction(action);
+    setShowBlockModal(true);
   };
 
-  const handleEditChange = (field, value) => {
-    setEditingUser(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const saveEdit = async () => {
+  const confirmBlockAction = async () => {
     try {
-      const response = await fetch(`${API_BASE}/users/${editingUser.id}`, {
-        method: 'PUT',
+      const newStatus = blockAction === 'block' ? 'blocked' : 'active';
+      const updatedUser = { ...userToBlock, status: newStatus };
+
+      const response = await fetch(`${API_BASE}/users/${userToBlock.id}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(editingUser),
+        body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!response.ok) throw new Error('Failed to update user');
+      if (!response.ok) throw new Error(`Failed to ${blockAction} user`);
 
-      const updatedUser = await response.json();
-      setUsers(users.map(user => 
-        user.id === updatedUser.id ? updatedUser : user
-      ));
-      setEditingUser(null);
-      toast.success('User updated successfully');
+      setUsers(users.map(u => u.id === userToBlock.id ? updatedUser : u));
+      
+      toast.success(`User ${blockAction === 'block' ? 'blocked' : 'unblocked'} successfully`);
     } catch (err) {
-      toast.error('Failed to update user');
-      console.error('Update error:', err);
-    }
-  };
-
-  const cancelEdit = () => {
-    setEditingUser(null);
-  };
-
-  const handleDelete = (user) => {
-    setUserToDelete(user);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDelete = async () => {
-    try {
-      const response = await fetch(`${API_BASE}/users/${userToDelete.id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) throw new Error('Failed to delete user');
-
-      setUsers(users.filter(user => user.id !== userToDelete.id));
-      toast.success('User deleted successfully');
-    } catch (err) {
-      toast.error('Failed to delete user');
-      console.error('Delete error:', err);
+      toast.error(`Failed to ${blockAction} user`);
+      console.error('Block/Unblock error:', err);
     } finally {
-      setShowDeleteModal(false);
-      setUserToDelete(null);
+      setShowBlockModal(false);
+      setUserToBlock(null);
+      setBlockAction('');
     }
   };
 
   const handleAddUser = async () => {
     try {
+      if (!newUser.name || !newUser.email) {
+        toast.error('Name and email are required');
+        return;
+      }
+
+      // Check if email already exists
+      const emailExists = users.some(user => 
+        user.email.toLowerCase() === newUser.email.toLowerCase()
+      );
+      
+      if (emailExists) {
+        toast.error('Email already exists');
+        return;
+      }
+
+      const userToAdd = {
+        ...newUser,
+        id: Date.now(), // Temporary ID for json-server
+      };
+
       const response = await fetch(`${API_BASE}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newUser),
+        body: JSON.stringify(userToAdd),
       });
 
       if (!response.ok) throw new Error('Failed to add user');
 
       const addedUser = await response.json();
-      setUsers([...users, addedUser]);
+      setUsers([addedUser, ...users]);
       setNewUser({
         name: '',
         email: '',
@@ -191,30 +240,12 @@ const UsersPage = () => {
     }
   };
 
-  const toggleUserStatus = async (user) => {
-    const newStatus = user.status === 'active' ? 'inactive' : 'active';
-    const updatedUser = { ...user, status: newStatus };
-
-    try {
-      const response = await fetch(`${API_BASE}/users/${user.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (!response.ok) throw new Error('Failed to update status');
-
-      setUsers(users.map(u => u.id === user.id ? updatedUser : u));
-      toast.success(`User ${newStatus === 'active' ? 'activated' : 'deactivated'}`);
-    } catch (err) {
-      toast.error('Failed to update status');
-      console.error('Status update error:', err);
-    }
-  };
-
   const exportUsers = () => {
+    if (filteredUsers.length === 0) {
+      toast.warning('No users to export');
+      return;
+    }
+
     const csvContent = [
       ['ID', 'Name', 'Email', 'Phone', 'Role', 'Status', 'Joined Date'],
       ...filteredUsers.map(user => [
@@ -238,6 +269,19 @@ const UsersPage = () => {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
     toast.success('Users exported successfully');
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setRoleFilter('all');
+    setStatusFilter('all');
+    setAdvancedFilters({
+      dateFrom: '',
+      dateTo: '',
+      sortBy: 'id',
+      sortOrder: 'desc'
+    });
+    toast.info('Filters cleared');
   };
 
   // Pagination
@@ -266,11 +310,19 @@ const UsersPage = () => {
   const getStatusBadge = (status) => {
     switch (status?.toLowerCase()) {
       case 'active':
-        return <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Active</span>;
+        return <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium flex items-center">
+          <UserCheck size={12} className="mr-1" /> Active
+        </span>;
+      case 'blocked':
+        return <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium flex items-center">
+          <Lock size={12} className="mr-1" /> Blocked
+        </span>;
       case 'inactive':
-        return <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Inactive</span>;
+        return <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium flex items-center">
+          <UserX size={12} className="mr-1" /> Inactive
+        </span>;
       default:
-        return <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Pending</span>;
+        return <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">{status || 'Unknown'}</span>;
     }
   };
 
@@ -296,20 +348,14 @@ const UsersPage = () => {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button 
-              onClick={() => setShowAddUserModal(true)}
-              className="inline-flex items-center px-4 py-3 bg-[#00A9FF] text-white font-medium rounded-lg hover:bg-[#0088CC]"
+            
+            {/* <button 
+              onClick={() => setShowFilters(!showFilters)}
+              className="inline-flex items-center px-4 py-3 bg-slate-100 text-slate-700 font-medium rounded-lg hover:bg-slate-200"
             >
-              <Plus size={20} className="mr-2" />
-              Add User
-            </button>
-            <button 
-              onClick={exportUsers}
-              className="inline-flex items-center px-4 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700"
-            >
-              <Download size={20} className="mr-2" />
-              Export CSV
-            </button>
+              <Filter size={20} className="mr-2" />
+              {showFilters ? 'Hide Filters' : 'Advanced Filters'}
+            </button> */}
             <button 
               onClick={fetchUsers}
               className="inline-flex items-center px-4 py-3 bg-slate-100 text-slate-700 font-medium rounded-lg hover:bg-slate-200"
@@ -359,17 +405,17 @@ const UsersPage = () => {
           <div className="bg-red-50 p-4 rounded-xl border border-red-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-red-800">Inactive</p>
+                <p className="text-sm font-medium text-red-800">Blocked</p>
                 <p className="text-2xl font-bold text-red-900 mt-2">
-                  {users.filter(u => u.status?.toLowerCase() === 'inactive').length}
+                  {users.filter(u => u.status?.toLowerCase() === 'blocked').length}
                 </p>
               </div>
-              <UserX size={24} className="text-red-600" />
+              <Lock size={24} className="text-red-600" />
             </div>
           </div>
         </div>
 
-        {/* Search and Filters */}
+        {/* Search and Basic Filters */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
@@ -388,10 +434,9 @@ const UsersPage = () => {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A9FF] focus:border-transparent"
             >
-              <option value="all">All Roles</option>
+              <option value="all">Users</option>
               <option value="admin">Admin</option>
-              <option value="user">User</option>
-              <option value="customer">Customer</option>
+             
             </select>
             
             <select
@@ -401,10 +446,23 @@ const UsersPage = () => {
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="blocked">Blocked</option>
+              
             </select>
           </div>
+
+          <div className="flex gap-4">
+            <button
+              onClick={clearFilters}
+              className="px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
+            >
+              Clear Filters
+            </button>
+          </div>
         </div>
+
+       
+        
       </div>
 
       {/* Error Message */}
@@ -449,7 +507,7 @@ const UsersPage = () => {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-slate-800">
-                          {user.name || 'Unknown User'}
+                          {user.username || 'Unknown User'}
                         </p>
                         <p className="text-xs text-slate-500 mt-1">ID: #{user.id}</p>
                       </div>
@@ -472,83 +530,39 @@ const UsersPage = () => {
                     </div>
                   </td>
                   <td className="py-4 px-6">
-                    {editingUser?.id === user.id ? (
-                      <select
-                        value={editingUser.role}
-                        onChange={(e) => handleEditChange('role', e.target.value)}
-                        className="px-3 py-1 border border-slate-300 rounded-full text-xs font-medium focus:outline-none focus:ring-1 focus:ring-[#00A9FF]"
-                      >
-                        <option value="admin">Admin</option>
-                        <option value="user">User</option>
-                        <option value="customer">Customer</option>
-                      </select>
-                    ) : (
-                      getRoleBadge(user.role)
-                    )}
+                    {getRoleBadge(user.role)}
                   </td>
                   <td className="py-4 px-6">
-                    {editingUser?.id === user.id ? (
-                      <select
-                        value={editingUser.status}
-                        onChange={(e) => handleEditChange('status', e.target.value)}
-                        className="px-3 py-1 border border-slate-300 rounded-full text-xs font-medium focus:outline-none focus:ring-1 focus:ring-[#00A9FF]"
-                      >
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                      </select>
-                    ) : (
-                      <button 
-                        onClick={() => toggleUserStatus(user)}
-                        className="hover:opacity-80 transition-opacity"
-                      >
-                        {getStatusBadge(user.status)}
-                      </button>
-                    )}
+                    {getStatusBadge(user.status)}
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex items-center">
                       <Calendar size={14} className="text-slate-400 mr-2" />
                       <p className="text-sm text-slate-600">
-                        {user.createdAt || user.joinDate || 'N/A'}
+                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                       </p>
                     </div>
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex space-x-2">
-                      {editingUser?.id === user.id ? (
-                        <>
-                          <button 
-                            onClick={saveEdit}
-                            className="inline-flex items-center p-2 text-green-600 hover:bg-green-50 rounded-lg"
-                            title="Save"
-                          >
-                            <Check size={16} />
-                          </button>
-                          <button 
-                            onClick={cancelEdit}
-                            className="inline-flex items-center p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                            title="Cancel"
-                          >
-                            <X size={16} />
-                          </button>
-                        </>
+                      {user.status?.toLowerCase() === 'active' ? (
+                        <button 
+                          onClick={() => handleBlockUser(user, 'block')}
+                          className="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm font-medium"
+                          title="Block User"
+                        >
+                          <Lock size={14} className="mr-1" />
+                          Block
+                        </button>
                       ) : (
-                        <>
-                          <button 
-                            onClick={() => handleEdit(user)}
-                            className="inline-flex items-center p-2 text-[#00A9FF] hover:bg-[#00A9FF]/10 rounded-lg"
-                            title="Edit"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(user)}
-                            className="inline-flex items-center p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                            title="Delete"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </>
+                        <button 
+                          onClick={() => handleBlockUser(user, 'unblock')}
+                          className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 text-sm font-medium"
+                          title="Unblock User"
+                        >
+                          <Unlock size={14} className="mr-1" />
+                          Unblock
+                        </button>
                       )}
                     </div>
                   </td>
@@ -570,13 +584,10 @@ const UsersPage = () => {
                 ? 'Try changing your search or filters' 
                 : 'No users have been registered yet.'}
             </p>
-            {searchTerm || roleFilter !== 'all' || statusFilter !== 'all' ? (
+            {(searchTerm || roleFilter !== 'all' || statusFilter !== 'all' || 
+              advancedFilters.dateFrom || advancedFilters.dateTo) ? (
               <button
-                onClick={() => {
-                  setSearchTerm('');
-                  setRoleFilter('all');
-                  setStatusFilter('all');
-                }}
+                onClick={clearFilters}
                 className="text-[#00A9FF] hover:text-[#0088CC] font-medium"
               >
                 Clear filters
@@ -640,23 +651,25 @@ const UsersPage = () => {
               <h3 className="text-xl font-bold text-slate-800 mb-4">Add New User</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Name</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Name *</label>
                   <input
                     type="text"
                     value={newUser.name}
                     onChange={(e) => setNewUser({...newUser, name: e.target.value})}
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A9FF] focus:border-transparent"
                     placeholder="Enter full name"
+                    required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Email *</label>
                   <input
                     type="email"
                     value={newUser.email}
                     onChange={(e) => setNewUser({...newUser, email: e.target.value})}
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A9FF] focus:border-transparent"
                     placeholder="Enter email address"
+                    required
                   />
                 </div>
                 <div>
@@ -690,7 +703,7 @@ const UsersPage = () => {
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A9FF] focus:border-transparent"
                     >
                       <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
+                      <option value="blocked">Blocked</option>
                     </select>
                   </div>
                 </div>
@@ -706,7 +719,7 @@ const UsersPage = () => {
                   onClick={handleAddUser}
                   className="px-4 py-2 bg-[#00A9FF] text-white rounded-lg hover:bg-[#0088CC]"
                 >
-                  <Save size={16} className="inline mr-2" />
+                  <Plus size={16} className="inline mr-2" />
                   Add User
                 </button>
               </div>
@@ -715,31 +728,42 @@ const UsersPage = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
+      {/* Block/Unblock Confirmation Modal */}
+      {showBlockModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
             <div className="p-6">
               <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
-                <Trash2 size={24} className="text-red-600" />
+                {blockAction === 'block' ? (
+                  <Lock size={24} className="text-red-600" />
+                ) : (
+                  <Unlock size={24} className="text-green-600" />
+                )}
               </div>
-              <h3 className="text-xl font-bold text-slate-800 text-center mb-2">Delete User</h3>
+              <h3 className="text-xl font-bold text-slate-800 text-center mb-2">
+                {blockAction === 'block' ? 'Block User' : 'Unblock User'}
+              </h3>
               <p className="text-slate-600 text-center mb-6">
-                Are you sure you want to delete <span className="font-semibold">{userToDelete?.name}</span>? 
-                This action cannot be undone.
+                Are you sure you want to {blockAction} <span className="font-semibold">{userToBlock?.name}</span>?
+                {blockAction === 'block' 
+                  ? ' This user will not be able to access their account until unblocked.'
+                  : ' This user will regain access to their account.'
+                }
               </p>
               <div className="flex justify-center space-x-3">
                 <button
-                  onClick={() => setShowDeleteModal(false)}
+                  onClick={() => setShowBlockModal(false)}
                   className="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={confirmDelete}
-                  className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  onClick={confirmBlockAction}
+                  className={`px-6 py-3 text-white rounded-lg hover:opacity-90 ${
+                    blockAction === 'block' ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
+                  }`}
                 >
-                  Delete User
+                  {blockAction === 'block' ? 'Block User' : 'Unblock User'}
                 </button>
               </div>
             </div>

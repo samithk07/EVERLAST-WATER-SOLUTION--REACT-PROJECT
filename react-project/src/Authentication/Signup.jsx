@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -51,30 +53,67 @@ const Login = () => {
                     role: user.role || 'user' // Default to 'user' if role not specified
                 });
 
-                alert(`Login successful! Welcome ${user.role === 'admin' ? 'Admin' : 'User'}`);
-                
+                // Toastify notification for successful login
+                toast.success(`Welcome back, ${user.name || user.username || user.email}!`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "light",
+                });
+
                 // Redirect based on user role
                 if (user.role === 'admin') {
                     // Redirect admin to admin dashboard
-                    navigate('/admin/dashboard');
+                    setTimeout(() => {
+                        navigate('/admin/dashboard');
+                    }, 1000);
                 } else {
                     // Regular user flow - check if need to redirect to checkout
                     const returnToCheckout = sessionStorage.getItem('returnToCheckout');
                     if (returnToCheckout) {
                         sessionStorage.removeItem('returnToCheckout');
-                        navigate('/checkout');
+                        setTimeout(() => {
+                            navigate('/checkout');
+                        }, 1000);
                     } else {
-                        navigate('/home');
+                        setTimeout(() => {
+                            navigate('/home');
+                        }, 1000);
                     }
                 }
             } catch (error) {
                 setServerError(error.message);
+                // Toastify notification for login error
+                toast.error(error.message || 'Login failed. Please try again.', {
+                    position: "top-right",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "light",
+                });
                 console.error("Login error:", error);
             } finally {
                 setIsLoading(false);
             }
         } else {
             setErrors(validationErrors);
+            // Show validation errors as toast notifications
+            Object.values(validationErrors).forEach(error => {
+                toast.error(error, {
+                    position: "top-right",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "light",
+                });
+            });
         }
     };
 
@@ -190,6 +229,11 @@ const Login = () => {
             email: 'admin@example.com',
             password: 'admin123'
         });
+        toast.info('Admin demo credentials filled!', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: true,
+        });
     };
 
     // User demo credentials
@@ -198,132 +242,151 @@ const Login = () => {
             email: 'demo@example.com',
             password: 'demo123'
         });
+        toast.info('User demo credentials filled!', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: true,
+        });
     };
 
     return (
-        <div
-            className="min-h-screen flex items-center justify-center p-5 bg-cover bg-center bg-fixed"
-            style={{
-                backgroundImage: `linear-gradient(rgba(205, 245, 253, 0.55), rgba(160, 233, 255, 0.55), rgba(137, 207, 243, 0.55)), url('src/assets/Gemini_Generated_Image_3jtlgd3jtlgd3jtl.png')`
-            }}
-        >
-            <div className="bg-white rounded-2xl shadow-2xl shadow-blue-500/10 border border-blue-100 p-8 w-full max-w-md">
-                {/* Header */}
-                <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold bg-linear-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-2">
-                        Welcome Back
-                    </h2>
-                    <p className="text-gray-500 text-sm">
-                        Sign in to your account
-                    </p>
-                </div>
-
-                {/* Server Error */}
-                {serverError && (
-                    <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-                        {serverError}
-                    </div>
-                )}
-
-                
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Email Field */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-900 block">
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            placeholder="Enter your email"
-                            autoComplete="email"
-                            onChange={handleChange}
-                            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${errors.email
-                                    ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                                    : 'border-blue-200 focus:border-blue-500 focus:ring-blue-200'
-                                }`}
-                        />
-                        {errors.email && (
-                            <p className="text-red-600 text-xs font-medium mt-1 flex items-center gap-1">
-                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                </svg>
-                                {errors.email}
-                            </p>
-                        )}
+        <>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            <div
+                className="min-h-screen flex items-center justify-center p-5 bg-cover bg-center bg-fixed"
+                style={{
+                    backgroundImage: `linear-gradient(rgba(205, 245, 253, 0.55), rgba(160, 233, 255, 0.55), rgba(137, 207, 243, 0.55)), url('src/assets/Gemini_Generated_Image_3jtlgd3jtlgd3jtl.png')`
+                }}
+            >
+                <div className="bg-white rounded-2xl shadow-2xl shadow-blue-500/10 border border-blue-100 p-8 w-full max-w-md">
+                    {/* Header */}
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-bold bg-linear-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-2">
+                            Welcome Back
+                        </h2>
+                        <p className="text-gray-500 text-sm">
+                            Sign in to your account
+                        </p>
                     </div>
 
-                    {/* Password Field */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-900 block">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            placeholder="Enter your password"
-                            autoComplete="current-password"
-                            onChange={handleChange}
-                            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${errors.password
-                                    ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                                    : 'border-blue-200 focus:border-blue-500 focus:ring-blue-200'
-                                }`}
-                        />
-                        {errors.password && (
-                            <p className="text-red-600 text-xs font-medium mt-1 flex items-center gap-1">
-                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                </svg>
-                                {errors.password}
-                            </p>
-                        )}
-                    </div>
+                    {/* Server Error */}
+                    {serverError && (
+                        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                            {serverError}
+                        </div>
+                    )}
 
-                    {/* Submit Button */}
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className={`w-full py-3 px-4 bg-linear-to-r from-blue-500 to-cyan-400 text-white font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isLoading
-                                ? 'opacity-60 cursor-not-allowed'
-                                : 'hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5'
-                            }`}
-                    >
-                        {isLoading ? (
-                            <div className="flex items-center justify-center gap-2">
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Signing In...
-                            </div>
-                        ) : (
-                            'Sign In'
-                        )}
-                    </button>
-                </form>
+                    
+                   
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Email Field */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-900 block">
+                                Email Address
+                            </label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                placeholder="Enter your email"
+                                autoComplete="email"
+                                onChange={handleChange}
+                                className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${errors.email
+                                        ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                                        : 'border-blue-200 focus:border-blue-500 focus:ring-blue-200'
+                                    }`}
+                            />
+                            {errors.email && (
+                                <p className="text-red-600 text-xs font-medium mt-1 flex items-center gap-1">
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    {errors.email}
+                                </p>
+                            )}
+                        </div>
 
-                {/* Footer */}
-                <div className="text-center mt-8 pt-6 border-t border-gray-100">
-                    <p className="text-gray-500 text-sm">
-                        Don't have an account?{' '}
+                        {/* Password Field */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-900 block">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                placeholder="Enter your password"
+                                autoComplete="current-password"
+                                onChange={handleChange}
+                                className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${errors.password
+                                        ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
+                                        : 'border-blue-200 focus:border-blue-500 focus:ring-blue-200'
+                                    }`}
+                            />
+                            {errors.password && (
+                                <p className="text-red-600 text-xs font-medium mt-1 flex items-center gap-1">
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    {errors.password}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Submit Button */}
                         <button
-                            onClick={() => navigate('/signup')}
-                            className="text-blue-500 font-semibold hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:underline"
+                            type="submit"
+                            disabled={isLoading}
+                            className={`w-full py-3 px-4 bg-linear-to-r from-blue-500 to-cyan-400 text-white font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isLoading
+                                    ? 'opacity-60 cursor-not-allowed'
+                                    : 'hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5'
+                                }`}
                         >
-                            Sign up
+                            {isLoading ? (
+                                <div className="flex items-center justify-center gap-2">
+                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Signing In...
+                                </div>
+                            ) : (
+                                'Sign In'
+                            )}
                         </button>
-                    </p>
-                    <div className="mt-4">
-                        <button
-                            onClick={() => navigate('/admin/login')}
-                            className="text-sm text-gray-600 hover:text-gray-800"
-                        >
-                            Admin Login
-                        </button>
+                    </form>
+
+                    {/* Footer */}
+                    <div className="text-center mt-8 pt-6 border-t border-gray-100">
+                        <p className="text-gray-500 text-sm">
+                            Don't have an account?{' '}
+                            <button
+                                onClick={() => navigate('/signup')}
+                                className="text-blue-500 font-semibold hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:underline"
+                            >
+                                Sign up
+                            </button>
+                        </p>
+                        <div className="mt-4">
+                            <button
+                                onClick={() => navigate('/admin/login')}
+                                className="text-sm text-gray-600 hover:text-gray-800"
+                            >
+                                Admin Login
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

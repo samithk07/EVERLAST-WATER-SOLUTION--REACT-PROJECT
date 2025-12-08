@@ -67,7 +67,6 @@ const Navbar = () => {
         { path: '/home', icon: Home, label: 'Home', showWhenLoggedIn: true },
         { path: '/about', icon: Info, label: 'About Us', showWhenLoggedIn: true },
         { path: '/watertest', icon: Droplets, label: 'Water Test', showWhenLoggedIn: true },
-        { path: '/order/:orderId', icon: Package , label: 'Orders', showWhenLoggedIn: true },
     ];
 
     const filteredMenuItems = menuItems.filter(item => 

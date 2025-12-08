@@ -88,7 +88,8 @@ const Services = () => {
     window.location.href = 'tel:+918078332452';
   };
 
-  const handleBookingSubmit = (e) => {
+  // UPDATED FUNCTION: Save to JSON Server
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -97,17 +98,43 @@ const Services = () => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      // Here you would typically send the data to your backend
-      console.log('Booking submitted:', formData);
+    try {
+      // Prepare booking data with additional fields
+      const bookingData = {
+        ...formData,
+        phone: formData.phone.replace(/\D/g, ''), // Clean phone number
+        date: new Date().toISOString(),
+        status: 'pending'
+      };
+
+      // Send POST request to JSON Server
+      const response = await fetch('http://localhost:3001/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save booking');
+      }
+
+      const result = await response.json();
+      console.log('Booking saved successfully:', result);
 
       // Show success popup
       setShowSuccessPopup(true);
       setShowBookingPopup(false);
       setFormData({ name: '', phone: '', service: '', message: '' });
+      
+    } catch (error) {
+      console.error('Error saving booking:', error);
+      // Show error message but keep the form open
+      alert('Failed to submit booking. Please try again or contact us directly.');
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   const closePopup = () => {
@@ -318,7 +345,7 @@ const Services = () => {
                 >
                   Cancel
                 </button>
-                {/* <button
+                <button
                   onClick={handleCallNow}
                   className="flex-1 py-3 rounded-lg font-semibold text-white transition-colors flex items-center justify-center gap-2"
                   style={{
@@ -329,7 +356,7 @@ const Services = () => {
                 >
                   <Phone size={20} />
                   Call Now
-                </button> */}
+                </button>
               </div>
             </div>
           </div>

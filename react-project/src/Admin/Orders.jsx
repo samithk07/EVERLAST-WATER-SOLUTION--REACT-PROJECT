@@ -6,7 +6,8 @@ import {
   Clock, 
   XCircle, 
   Eye, 
-  Download,
+  
+  IndianRupee ,
   Filter,
   Search,
   Edit2,
@@ -101,7 +102,7 @@ const OrdersPage = () => {
       setUsers(usersData);
 
       // Transform orders data with complete details
-      const transformedOrders = await transformOrdersData(ordersData, productsData, usersData);
+      const transformedOrders = transformOrdersData(ordersData, productsData, usersData);
       setOrders(transformedOrders);
       setError('');
       toast.success('All data loaded successfully');
@@ -119,22 +120,22 @@ const OrdersPage = () => {
     }
   };
 
-  const transformOrdersData = async (ordersData, productsData, usersData) => {
+  const transformOrdersData = (ordersData, productsData, usersData) => {
     return ordersData.map(order => {
       // Find user details
-      const user = usersData.find(u => u.id === order.userId || u.email === order.customerEmail);
+      const user = usersData.find(u => u.id === order.userId || u.email === order.userEmail);
       
       // Get all ordered products with full details
       const orderItems = order.items || order.products || [];
       const detailedItems = orderItems.map(item => {
-        const product = productsData.find(p => p.id === item.productId || p.name === item.name);
+        const product = productsData.find(p => p.id === item.productId);
         return {
           ...item,
           id: item.productId || product?.id || item.id,
-          name: product?.name || item.name || 'Unknown Product',
-          price: product?.price || item.price || 0,
+          name: item.productName || product?.name || item.name || 'Unknown Product',
+          price: item.price || product?.price || 0,
           quantity: item.quantity || 1,
-          image: product?.image || item.image,
+          image: item.productImage || product?.image || item.image,
           category: product?.category || item.category,
           description: product?.description || item.description
         };
@@ -142,28 +143,53 @@ const OrdersPage = () => {
 
       // Calculate total from items if not provided
       const calculatedTotal = detailedItems.reduce((total, item) => 
-        total + (item.price * item.quantity), 0
+        total + ((item.price || 0) * (item.quantity || 1)), 0
       );
+
+      // Extract address data from the order
+      const deliveryAddress = order.deliveryAddress || {};
+      
+      // Build shipping address object from deliveryAddress
+      const shippingAddress = {
+        street: deliveryAddress.addressLine1 || '',
+        city: deliveryAddress.city || '',
+        state: deliveryAddress.state || '',
+        zipCode: deliveryAddress.pincode || deliveryAddress.zipCode || '',
+        country: deliveryAddress.country || 'India',
+        fullAddress: deliveryAddress.addressLine1 || ''
+      };
+
+      // Add addressLine2 if exists
+      if (deliveryAddress.addressLine2 && deliveryAddress.addressLine2.trim() !== '') {
+        shippingAddress.fullAddress += `, ${deliveryAddress.addressLine2}`;
+      }
+
+      // Add city, state, zip if they exist
+      if (deliveryAddress.city) {
+        shippingAddress.fullAddress += `, ${deliveryAddress.city}`;
+      }
+      if (deliveryAddress.state) {
+        shippingAddress.fullAddress += `, ${deliveryAddress.state}`;
+      }
+      if (deliveryAddress.pincode) {
+        shippingAddress.fullAddress += ` - ${deliveryAddress.pincode}`;
+      }
+      if (deliveryAddress.country && deliveryAddress.country !== 'India') {
+        shippingAddress.fullAddress += `, ${deliveryAddress.country}`;
+      }
 
       return {
         id: order.id,
         orderId: order.orderId || `ORD-${String(order.id).padStart(5, '0')}`,
         
         // Customer details from user or order data
-        customerName: order.customerName || user?.name || `Customer #${order.id}`,
-        customerEmail: order.customerEmail || user?.email || order.email || `customer${order.id}@example.com`,
-        customerPhone: order.customerPhone || user?.phone || order.phone || 'Not provided',
+        customerName: order.userName || user?.name || deliveryAddress.fullName || `Customer #${order.id}`,
+        customerEmail: order.userEmail || user?.email || deliveryAddress.email || `customer${order.id}@example.com`,
+        customerPhone: deliveryAddress.phoneNumber || order.phone || 'Not provided',
         userId: order.userId || user?.id,
         
-        // Shipping address details
-        shippingAddress: {
-          street: order.shippingAddress?.street || order.address?.street || order.street || 'Not specified',
-          city: order.shippingAddress?.city || order.address?.city || order.city || 'Not specified',
-          state: order.shippingAddress?.state || order.address?.state || order.state || 'Not specified',
-          zipCode: order.shippingAddress?.zipCode || order.address?.zipCode || order.zipCode || 'Not specified',
-          country: order.shippingAddress?.country || order.address?.country || order.country || 'India',
-          fullAddress: order.shippingAddress?.fullAddress || order.address || order.shippingAddress || 'Address not specified'
-        },
+        // Shipping address details - using the properly formatted shippingAddress object
+        shippingAddress: shippingAddress,
         
         // Order items with full product details
         items: detailedItems,
@@ -173,7 +199,7 @@ const OrdersPage = () => {
         tax: order.tax || order.taxAmount || 0,
         shippingCost: order.shippingCost || order.shipping || 0,
         discount: order.discount || order.discountAmount || 0,
-        totalAmount: order.totalAmount || order.total || (calculatedTotal + (order.tax || 0) + (order.shippingCost || 0) - (order.discount || 0)),
+        totalAmount: order.totalAmount || order.total || calculatedTotal,
         
         // Order status and dates
         status: order.status || 'pending',
@@ -201,61 +227,46 @@ const OrdersPage = () => {
       {
         id: 1,
         orderId: 'ORD-00001',
-        customerName: 'Rajesh Kumar',
-        customerEmail: 'rajesh.kumar@example.com',
-        customerPhone: '+91 9876543210',
-        userId: 1,
-        shippingAddress: {
-          street: '123 MG Road',
-          city: 'Bangalore',
-          state: 'Karnataka',
-          zipCode: '560001',
-          country: 'India',
-          fullAddress: '123 MG Road, Bangalore, Karnataka - 560001, India'
+        userId: "1",
+        userName: "Samith",
+        userEmail: "samith677@gmail.com",
+        deliveryAddress: {
+          fullName: "Samith",
+          phoneNumber: "8078332452",
+          email: "samith677@gmail.com",
+          addressLine1: "Koppal, muttamgate, shiriya, kumbala",
+          addressLine2: "",
+          city: "Bandiyod",
+          state: "Kerala",
+          pincode: "671322",
+          country: "India"
         },
         items: [
           { 
-            id: 1, 
-            productId: 1,
-            name: 'AquaPure RO System', 
-            description: 'Advanced RO water purification system',
-            price: 15999, 
+            productId: "8edb",
+            productName: "Everlast RO purifier", 
+            productImage: "https://www.lg.com/content/dam/channel/wcms/in/waterpurifiers/category-page-banner/WPR-Steel-Bottle-Banner-720x960-M-v2.jpg",
+            price: 13000, 
             quantity: 1,
-            image: '/images/ro-system.jpg',
-            category: 'RO Systems'
+            total: 13000
           },
           { 
-            id: 2, 
-            productId: 2,
-            name: 'Installation Kit', 
-            description: 'Complete installation kit with tools',
+            productId: "2",
+            productName: "Installation Kit", 
             price: 1999, 
-            quantity: 1,
-            image: '/images/installation-kit.jpg',
-            category: 'Accessories'
-          },
-          { 
-            id: 3, 
-            productId: 3,
-            name: 'Filter Replacement Set', 
-            description: 'Annual filter replacement kit',
-            price: 2999, 
-            quantity: 2,
-            image: '/images/filters.jpg',
-            category: 'Spare Parts'
+            quantity: 1
           }
         ],
-        subtotal: 23997,
-        tax: 2399.7,
+        subtotal: 14999,
+        tax: 1499.9,
         shippingCost: 299,
         discount: 500,
-        totalAmount: 26195.7,
-        status: 'completed',
+        totalAmount: 16297.9,
+        status: 'processing',
         paymentMethod: 'credit-card',
         paymentStatus: 'paid',
         orderDate: '2024-01-15T10:30:00Z',
         estimatedDelivery: '2024-01-22T10:30:00Z',
-        deliveredDate: '2024-01-21T14:45:00Z',
         notes: 'Customer requested morning delivery',
         trackingNumber: 'TRK-789456123',
         shippingMethod: 'express',
@@ -265,46 +276,35 @@ const OrdersPage = () => {
       {
         id: 2,
         orderId: 'ORD-00002',
-        customerName: 'Priya Sharma',
-        customerEmail: 'priya.sharma@example.com',
-        customerPhone: '+91 8765432109',
-        userId: 2,
-        shippingAddress: {
-          street: '456 Park Street',
-          city: 'Mumbai',
-          state: 'Maharashtra',
-          zipCode: '400001',
-          country: 'India',
-          fullAddress: '456 Park Street, Mumbai, Maharashtra - 400001, India'
+        userId: "2",
+        userName: "Priya Sharma",
+        userEmail: "priya.sharma@example.com",
+        deliveryAddress: {
+          fullName: "Priya Sharma",
+          phoneNumber: "+91 8765432109",
+          email: "priya.sharma@example.com",
+          addressLine1: "456 Park Street",
+          addressLine2: "Near Metro Station",
+          city: "Mumbai",
+          state: "Maharashtra",
+          pincode: "400001",
+          country: "India"
         },
         items: [
           { 
-            id: 4, 
-            productId: 4,
-            name: 'UV Shield Purifier', 
-            description: 'UV based water purification system',
+            productId: "3",
+            productName: "UV Shield Purifier", 
+            productImage: "/images/uv-purifier.jpg",
             price: 8999, 
-            quantity: 1,
-            image: '/images/uv-purifier.jpg',
-            category: 'UV Purifiers'
-          },
-          { 
-            id: 5, 
-            productId: 5,
-            name: 'Mineral Booster', 
-            description: 'Adds essential minerals to purified water',
-            price: 1499, 
-            quantity: 1,
-            image: '/images/mineral-booster.jpg',
-            category: 'Accessories'
+            quantity: 1
           }
         ],
-        subtotal: 10498,
-        tax: 1049.8,
+        subtotal: 8999,
+        tax: 899.9,
         shippingCost: 199,
         discount: 0,
-        totalAmount: 11746.8,
-        status: 'processing',
+        totalAmount: 10097.9,
+        status: 'confirmed',
         paymentMethod: 'upi',
         paymentStatus: 'paid',
         orderDate: '2024-01-14T15:45:00Z',
@@ -543,7 +543,7 @@ const OrdersPage = () => {
         order.orderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.customerEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.shippingAddress?.fullAddress?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        formatAddress(order.shippingAddress)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.items?.some(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
       
       const matchesStatus = selectedStatus === 'all' || order.status === selectedStatus;
@@ -608,63 +608,28 @@ const OrdersPage = () => {
 
   const stats = calculateStats();
 
-  // Export functions
-  const exportOrders = (format) => {
-    const data = filteredOrders.map(order => ({
-      'Order ID': order.orderId,
-      'Customer': order.customerName,
-      'Email': order.customerEmail,
-      'Phone': order.customerPhone,
-      'Shipping Address': order.shippingAddress?.fullAddress,
-      'City': order.shippingAddress?.city,
-      'State': order.shippingAddress?.state,
-      'Pincode': order.shippingAddress?.zipCode,
-      'Date': format(new Date(order.orderDate), 'yyyy-MM-dd HH:mm'),
-      'Items': order.items?.map(item => `${item.name} x${item.quantity}`).join(', '),
-      'Total Items': order.items?.reduce((sum, item) => sum + item.quantity, 0),
-      'Total Amount': order.totalAmount,
-      'Status': statusConfig[order.status]?.label || order.status,
-      'Payment Method': order.paymentMethod,
-      'Payment Status': order.paymentStatus,
-      'Tracking Number': order.trackingNumber,
-      'Estimated Delivery': format(new Date(order.estimatedDelivery), 'yyyy-MM-dd')
-    }));
-
-    let content;
-    let mimeType;
-    let filename = `orders_export_${format(new Date(), 'yyyyMMdd_HHmmss')}`;
-
-    if (format === 'csv') {
-      const headers = Object.keys(data[0] || {}).join(',');
-      const rows = data.map(row => Object.values(row).map(val => 
-        `"${String(val).replace(/"/g, '""')}"`
-      ).join(','));
-      content = [headers, ...rows].join('\n');
-      mimeType = 'text/csv';
-      filename += '.csv';
-    } else if (format === 'json') {
-      content = JSON.stringify(data, null, 2);
-      mimeType = 'application/json';
-      filename += '.json';
-    }
-
-    const blob = new Blob([content], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    toast.success(`Orders exported as ${format.toUpperCase()}`);
-  };
+ 
 
   // Format address for display
   const formatAddress = (address) => {
+    if (!address) return 'Address not specified';
+    
     if (typeof address === 'string') return address;
-    return `${address.street}, ${address.city}, ${address.state} - ${address.zipCode}, ${address.country}`;
+    
+    // If address has fullAddress field, use it
+    if (address.fullAddress && address.fullAddress.trim() !== '') {
+      return address.fullAddress;
+    }
+    
+    // Build address from individual components
+    const parts = [];
+    if (address.street) parts.push(address.street);
+    if (address.city) parts.push(address.city);
+    if (address.state) parts.push(address.state);
+    if (address.zipCode) parts.push(`- ${address.zipCode}`);
+    if (address.country) parts.push(address.country);
+    
+    return parts.length > 0 ? parts.join(', ') : 'Address not specified';
   };
 
   if (loading) {
@@ -698,13 +663,7 @@ const OrdersPage = () => {
               <RefreshCw size={18} className="mr-2" />
               Refresh All
             </button>
-            {/* <button 
-              onClick={() => exportOrders('csv')}
-              className="inline-flex items-center px-4 py-3 bg-[#00A9FF] text-white font-medium rounded-lg hover:bg-[#0088CC]"
-            >
-              <Download size={20} className="mr-2" />
-              Export Orders
-            </button> */}
+            
           </div>
         </div>
 
@@ -725,7 +684,7 @@ const OrdersPage = () => {
           <div className="bg-linear-to-br from-green-50 to-green-100 p-4 rounded-lg">
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
-                <DollarSign size={20} className="text-green-600" />
+                <IndianRupee  size={20} className="text-green-600" />
               </div>
               <div>
                 <p className="text-sm text-green-800">Total Revenue</p>
@@ -1242,6 +1201,9 @@ const OrdersPage = () => {
                     <p className="text-sm text-slate-800">{selectedOrder.shippingAddress?.street}</p>
                     <p className="text-sm text-slate-800">{selectedOrder.shippingAddress?.city}, {selectedOrder.shippingAddress?.state}</p>
                     <p className="text-sm text-slate-800">{selectedOrder.shippingAddress?.zipCode}, {selectedOrder.shippingAddress?.country}</p>
+                    <p className="text-xs text-slate-500 mt-2">
+                      {formatAddress(selectedOrder.shippingAddress)}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1321,7 +1283,11 @@ const OrdersPage = () => {
                     <div key={index} className="px-4 py-3 flex items-center justify-between hover:bg-slate-50">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-slate-100 rounded flex items-center justify-center">
-                          <Package size={16} className="text-slate-400" />
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} className="w-8 h-8 object-contain rounded" />
+                          ) : (
+                            <Package size={16} className="text-slate-400" />
+                          )}
                         </div>
                         <div>
                           <p className="text-sm font-medium text-slate-800">{item.name}</p>

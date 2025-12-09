@@ -8,7 +8,7 @@ import {
   Users,
   Menu,
   X,
-  Wrench ,
+  Wrench,
   Droplets,
   LogOut,
   Search,
@@ -18,8 +18,7 @@ import {
   ChevronLeft,
   ChevronRight as ChevronRightIcon
 } from 'lucide-react';
- import { useAuth } from '../../context/AuthContext';
-  
+import { useAuth } from '../../context/AuthContext';
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -41,7 +40,7 @@ const AdminLayout = () => {
     { id: 'products', label: 'Products', icon: <Package size={20} />, path: '/admin/products' },
     { id: 'orders', label: 'Orders', icon: <ShoppingBag size={20} />, path: '/admin/orders' },
     { id: 'users', label: 'Users', icon: <Users size={20} />, path: '/admin/users' },
-    { id: 'services', label: 'Services', icon: <Wrench  size={20} />, path: '/admin/services' },
+    { id: 'services', label: 'Services', icon: <Wrench size={20} />, path: '/admin/services' },
   ];
 
   // Check if mobile on mount and resize
@@ -58,7 +57,6 @@ const AdminLayout = () => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     
-    // Prevent horizontal scrolling
     document.body.style.overflowX = 'hidden';
     
     return () => {
@@ -166,11 +164,11 @@ const AdminLayout = () => {
             ${sidebarOpen ? 'lg:translate-x-0' : 'lg:-translate-x-full'}
             flex flex-col h-full
             shadow-xl lg:shadow-lg
-            ${sidebarOpen ? 'w-64 lg:w-72 xl:w-80' : 'w-0 lg:w-16'}
+            ${sidebarOpen ? 'w-64 lg:w-72 xl:w-80' : 'w-0 lg:w-0'}
           `}
         >
           {/* Sidebar Header */}
-          <div className={`p-4 border-b border-[#393E46] ${sidebarOpen ? '' : 'lg:px-2'}`}>
+          <div className={`p-4 border-b border-[#393E46] ${sidebarOpen ? '' : 'lg:p-2'}`}>
             <div className={`flex items-center ${sidebarOpen ? 'justify-between' : 'lg:justify-center'}`}>
               {sidebarOpen ? (
                 <>
@@ -192,35 +190,73 @@ const AdminLayout = () => {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={toggleSidebar}
-                  className="hidden lg:block p-1.5 rounded-lg hover:bg-[#393E46] transition-colors shrink-0"
-                  aria-label="Expand sidebar"
-                >
-                  <ChevronRightIcon size={20} className="text-[#EEEEEE]" />
-                </button>
+                <div className="hidden lg:flex justify-center w-full">
+                  <button
+                    onClick={toggleSidebar}
+                    className="p-1.5 rounded-lg hover:bg-[#393E46] transition-colors"
+                    aria-label="Expand sidebar"
+                  >
+                    <ChevronRightIcon size={20} className="text-[#EEEEEE]" />
+                  </button>
+                </div>
               )}
             </div>
           </div>
 
           {/* Navigation - Scrollbar hidden */}
-          <nav className="flex-1 p-4 overflow-y-auto scrollbar-hide">
+          <nav className={`flex-1 overflow-y-auto scrollbar-hide ${sidebarOpen ? 'p-4' : 'lg:p-0'}`}>
             <div className="mb-6">
               {sidebarOpen && (
                 <p className="text-xs font-semibold text-white uppercase tracking-wider mb-3 px-2 truncate">
                   Main Menu
                 </p>
               )}
-              <ul className="space-y-1">
-                {navItems.map((item) => (
-                  <li key={item.id}>
+              {sidebarOpen || mobileMenuOpen ? (
+                <ul className="space-y-1">
+                  {navItems.map((item) => (
+                    <li key={item.id}>
+                      <NavLink
+                        to={item.path}
+                        onClick={closeMobileMenu}
+                        end={item.path === '/admin/dashboard'}
+                        className={({ isActive }) => `
+                          group flex items-center rounded-xl transition-all duration-200 overflow-hidden
+                          ${sidebarOpen ? 'px-3 py-3 sm:py-2.5' : 'lg:hidden px-3 py-3'}
+                          ${isActive
+                            ? 'bg-[#00ADB5] text-white shadow-lg'
+                            : 'text-white hover:bg-[#393E46] hover:shadow-md'
+                          }
+                          active:scale-[0.98]
+                        `}
+                        style={{ textDecoration: 'none' }}
+                        title={!sidebarOpen ? item.label : ''}
+                      >
+                        <span className={`${sidebarOpen ? 'mr-3' : ''} group-hover:scale-110 transition-transform shrink-0`}>
+                          {item.icon}
+                        </span>
+                        {sidebarOpen && (
+                          <>
+                            <span className="text-sm font-medium flex-1 min-w-0 truncate">{item.label}</span>
+                            <ChevronRightIcon size={14} className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                          </>
+                        )}
+                        {item.id === 'dashboard' && location.pathname === '/admin/dashboard' && sidebarOpen && (
+                          <div className="w-2 h-2 bg-[#00ADB5] rounded-full animate-pulse ml-2 shrink-0"></div>
+                        )}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                // Collapsed sidebar navigation icons (desktop only)
+                <div className="hidden lg:flex flex-col items-center space-y-1 py-2">
+                  {navItems.map((item) => (
                     <NavLink
+                      key={item.id}
                       to={item.path}
-                      onClick={closeMobileMenu}
                       end={item.path === '/admin/dashboard'}
                       className={({ isActive }) => `
-                        group flex items-center rounded-xl transition-all duration-200 overflow-hidden
-                        ${sidebarOpen ? 'px-3 py-3 sm:py-2.5' : 'lg:justify-center lg:p-3'}
+                        group flex items-center justify-center p-3 rounded-xl transition-all duration-200
                         ${isActive
                           ? 'bg-[#00ADB5] text-white shadow-lg'
                           : 'text-white hover:bg-[#393E46] hover:shadow-md'
@@ -228,24 +264,13 @@ const AdminLayout = () => {
                         active:scale-[0.98]
                       `}
                       style={{ textDecoration: 'none' }}
-                      title={!sidebarOpen ? item.label : ''}
+                      title={item.label}
                     >
-                      <span className={`${sidebarOpen ? 'mr-3' : ''} group-hover:scale-110 transition-transform shrink-0`}>
-                        {item.icon}
-                      </span>
-                      {sidebarOpen && (
-                        <>
-                          <span className="text-sm font-medium flex-1 min-w-0 truncate">{item.label}</span>
-                          <ChevronRightIcon size={14} className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                        </>
-                      )}
-                      {item.id === 'dashboard' && location.pathname === '/admin/dashboard' && sidebarOpen && (
-                        <div className="w-2 h-2 bg-[#00ADB5] rounded-full animate-pulse ml-2 shrink-0"></div>
-                      )}
+                      {item.icon}
                     </NavLink>
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Quick Stats - Hidden on collapsed sidebar */}
@@ -267,7 +292,7 @@ const AdminLayout = () => {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className={`p-4 border-t border-[#393E46] ${sidebarOpen ? '' : 'lg:px-2'}`}>
+          <div className={`border-t border-[#393E46] ${sidebarOpen ? 'p-4' : 'lg:p-2'}`}>
             {/* User Info */}
             {sidebarOpen ? (
               <div className="flex items-center space-x-3 mb-4 p-2 rounded-lg bg-[#393E46]">
@@ -280,7 +305,7 @@ const AdminLayout = () => {
                 </div>
               </div>
             ) : (
-              <div className="hidden lg:flex justify-center mb-4">
+              <div className="hidden lg:flex justify-center mb-4 py-2">
                 <div className="w-10 h-10 rounded-full bg-[#00ADB5] flex items-center justify-center text-[#EEEEEE] font-bold shadow-md">
                   {user?.name?.charAt(0) || 'A'}
                 </div>
@@ -321,7 +346,7 @@ const AdminLayout = () => {
         {/* Main Content Area */}
         <main 
           ref={mainContentRef}
-          className={`flex-1 min-w-0 flex flex-col ${sidebarOpen ? 'lg:w-[calc(100vw-288px)] xl:w-[calc(100vw-320px)]' : 'lg:w-[calc(100vw-64px)]'}`}
+          className={`flex-1 min-w-0 flex flex-col transition-all duration-300 ${sidebarOpen ? 'lg:w-[calc(100vw-288px)] xl:w-[calc(100vw-320px)]' : 'lg:w-full'}`}
         >
           {/* Top Bar - Desktop */}
           <header className={`${darkMode ? 'bg-[#393E46]' : 'bg-white'} border-b ${darkMode ? 'border-[#222831]' : 'border-[#EEEEEE]'} hidden lg:block sticky top-0 z-40 w-full`}>
@@ -345,7 +370,21 @@ const AdminLayout = () => {
                   </div>
                 </div>
                 
-                {/*  */}
+                <div className="flex items-center space-x-4 shrink-0">
+                  <div className="hidden md:block relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#393E46] dark:text-[#EEEEEE]" size={18} />
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 pr-4 py-2 w-48 lg:w-64 rounded-lg border border-[#EEEEEE] focus:outline-none focus:ring-1 focus:ring-[#00ADB5] dark:bg-[#393E46] dark:border-[#222831] dark:text-[#EEEEEE]"
+                    />
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-[#00ADB5] flex items-center justify-center text-[#EEEEEE] font-bold text-sm shadow-md shrink-0">
+                    {user?.name?.charAt(0) || 'A'}
+                  </div>
+                </div>
               </div>
             </div>
           </header>
@@ -375,7 +414,15 @@ const AdminLayout = () => {
                       </span>
                     </div>
                   </div>
-                
+                  
+                  <div className="flex items-center space-x-2 shrink-0">
+                    <button
+                      onClick={() => setDarkMode(!darkMode)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${darkMode ? 'bg-[#00ADB5] text-[#EEEEEE] hover:bg-[#0099a4]' : 'bg-[#393E46] text-[#EEEEEE] hover:bg-[#2d3138]'}`}
+                    >
+                      {darkMode ? 'Light Mode' : 'Dark Mode'}
+                    </button>
+                  </div>
                 </div>
               </div>
 

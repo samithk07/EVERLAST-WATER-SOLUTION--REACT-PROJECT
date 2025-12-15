@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from '../component/NavBar';
+import NavBar from '../components/NavBar';
 import { TestTube, Shield, Users, CheckCircle, Phone, Award, FileText, ShoppingCart, X } from 'lucide-react';
-import Footer from '../component/Footer';
+import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 
 const HomePage = () => {

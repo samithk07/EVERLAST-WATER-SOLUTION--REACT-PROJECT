@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import NavBar from '../component/NavBar';
-import Footer from '../component/Footer';
+import NavBar from '../components/NavBar';
+import Footer from '../components/Footer';
 
 const TDSAdjuster = () => {
     const [tdsLevel, setTdsLevel] = useState(500);

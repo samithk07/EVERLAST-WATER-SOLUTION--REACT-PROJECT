@@ -12,7 +12,8 @@ const MAX_IMAGE_SIZE = 100 * 1024; // 100KB max for demo
 const COMPRESSED_MAX_WIDTH = 400;
 const COMPRESSED_QUALITY = 0.7;
 
-// Toast Notification componentconst ToastNotification = ({ type, message, onClose }) => {
+// Toast Notification component
+const ToastNotification = ({ type, message, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -74,10 +75,10 @@ const COMPRESSED_QUALITY = 0.7;
             {config.icon}
           </div>
           <div className="ml-3 flex-1">
-            <p className="text-sm font-medium ${config.textColor}">
+            <p className={`text-sm font-medium ${config.textColor}`}>
               {config.title}
             </p>
-            <p className="mt-1 text-sm ${config.textColor} opacity-90">
+            <p className={`mt-1 text-sm ${config.textColor} opacity-90`}>
               {message}
             </p>
           </div>
@@ -99,58 +100,7 @@ const COMPRESSED_QUALITY = 0.7;
   );
 };
 
-// Toast Provider componentconst ToastProvider = ({ children }) => {
-  const [toasts, setToasts] = useState([]);
-
-  const showToast = (type, message) => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, type, message }]);
-  };
-
-  const removeToast = (id) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  };
-
-  return (
-    <>
-      {children}
-      {toasts.map(toast => (
-        <ToastNotification
-          key={toast.id}
-          type={toast.type}
-          message={toast.message}
-          onClose={() => removeToast(toast.id)}
-        />
-      ))}
-    </>
-  );
-};
-
-const compressImage = (file) => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      let width = img.width;
-      let height = img.height;
-      if (width > COMPRESSED_MAX_WIDTH) {
-        height = (height * COMPRESSED_MAX_WIDTH) / width;
-        width = COMPRESSED_MAX_WIDTH;
-      }
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL('image/jpeg', COMPRESSED_QUALITY));
-    };
-    img.onerror = reject;
-    img.src = e.target.result;
-  };
-  reader.onerror = reject;
-  reader.readAsDataURL(file);
-});
-
+// StarRating Component
 const StarRating = ({ rating, onRatingChange, size = 20, editable = false }) => {
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -279,6 +229,31 @@ const ProductsPage = () => {
   const removeToast = (id) => {
     setToasts(prev => prev.filter(toast => toast.id !== id));
   };
+
+  const compressImage = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        if (width > COMPRESSED_MAX_WIDTH) {
+          height = (height * COMPRESSED_MAX_WIDTH) / width;
+          width = COMPRESSED_MAX_WIDTH;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', COMPRESSED_QUALITY));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 
   const fetchProducts = async () => {
     try {
@@ -511,7 +486,9 @@ const ProductsPage = () => {
         <div class="bg-white rounded-2xl w-full max-w-md animate-scale-in">
           <div class="p-6 border-b border-[#EEEEEE]">
             <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
-              <AlertTriangle class="w-6 h-6 text-red-600" />
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.338 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
             </div>
             <h3 class="text-lg font-bold text-[#222831] text-center mb-2">Confirm Delete</h3>
             <p class="text-[#393E46]/60 text-sm text-center">
@@ -524,7 +501,9 @@ const ProductsPage = () => {
               Cancel
             </button>
             <button id="confirmDelete" class="flex-1 px-4 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-all flex items-center justify-center gap-2">
-              <Trash2 class="w-4 h-4" />
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
               Delete
             </button>
           </div>
@@ -1011,7 +990,7 @@ const ProductsPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-[#393E46] mb-2 items-center">
-                      <Hash size={16} className="mr-1 inline" />
+                      <Hash size={16} className="mr-1" />
                       SKU
                     </label>
                     <input
@@ -1134,8 +1113,8 @@ const ProductsPage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-[#393E46] mb-2 items-center">
-                      <Percent size={16} className="mr-1 inline" />
+                    <label className="text-sm font-medium text-[#393E46] mb-2 flex items-center">
+                      <Percent size={16} className="mr-1" />
                       Discount (%)
                     </label>
                     <input
@@ -1415,11 +1394,11 @@ Energy saving mode"
       </div>
 
       {/* Toast Notifications */}
-      {toasts.map(toast => (
+      {toasts.map((toast, index) => (
         <div
           key={toast.id}
-          className={`fixed top-6 right-6 z-50 w-96 ${toasts.indexOf(toast) === 0 ? 'animate-slide-in' : 'opacity-0'}`}
-          style={{ top: `${6 + (toasts.indexOf(toast) * 90)}px` }}
+          className={`fixed top-6 right-6 z-50 w-96 animate-slide-in`}
+          style={{ top: `${6 + (index * 90)}px` }}
         >
           <div className={`rounded-xl shadow-lg p-4 border ${
             toast.type === 'success' 
@@ -1491,7 +1470,7 @@ Energy saving mode"
       ))}
 
       {/* Add custom animations to global styles */}
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes slideIn {
           from {
             transform: translateX(100%);
@@ -1563,14 +1542,21 @@ Energy saving mode"
           animation: progress 3s linear forwards;
         }
         
-        .shake-animation {
-          animation: shake 0.5s ease-in-out;
-        }
-        
         @keyframes shake {
           0%, 100% { transform: rotate(0deg); }
           25% { transform: rotate(10deg); }
           75% { transform: rotate(-10deg); }
+        }
+        
+        .shake-animation {
+          animation: shake 0.5s ease-in-out;
+        }
+        
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
     </>

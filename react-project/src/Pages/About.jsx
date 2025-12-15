@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Users, Award, Clock, Shield, CheckCircle, Mail, X } from 'lucide-react';
-import Footer from '../component/Footer';
-import NavBar from '../component/NavBar';
+import Footer from '../components/Footer';
+import NavBar from '../components/NavBar';
 
 const AboutUs = () => {
   const [selectedMember, setSelectedMember] = useState(null);

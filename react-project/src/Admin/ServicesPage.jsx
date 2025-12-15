@@ -141,7 +141,8 @@ const ServicesPage = () => {
     }
   };
 
-  // Status badge component  const StatusBadge = ({ status }) => {
+  // Status badge component
+  const StatusBadge = ({ status }) => {
     const config = {
       pending: { color: 'bg-yellow-100 text-yellow-800', icon: <Clock size={14} /> },
       confirmed: { color: 'bg-blue-100 text-blue-800', icon: <CheckCircle size={14} /> },
@@ -359,7 +360,7 @@ const ServicesPage = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900 capitalize">
-                          {booking.service?.replace('-', ' ')}
+                          {booking.service?.replace(/-/g, ' ')}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -464,7 +465,7 @@ const ServicesPage = () => {
                     <div>
                       <p className="text-sm text-gray-600">Service Type</p>
                       <p className="font-medium capitalize">
-                        {selectedBooking.service?.replace('-', ' ') || 'N/A'}
+                        {selectedBooking.service?.replace(/-/g, ' ') || 'N/A'}
                       </p>
                     </div>
                     <div>
@@ -535,7 +536,7 @@ const ServicesPage = () => {
                   Booking #{bookingToUpdate.id} • {bookingToUpdate.name}
                 </p>
                 <p className="font-medium capitalize">
-                  Service: {bookingToUpdate.service?.replace('-', ' ')}
+                  Service: {bookingToUpdate.service?.replace(/-/g, ' ')}
                 </p>
               </div>
 

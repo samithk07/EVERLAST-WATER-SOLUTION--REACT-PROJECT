@@ -19,7 +19,7 @@ import ProductsPageadmin from './admin/Products'
 import OrdersPage from './admin/Orders'
 import UsersPage from './admin/Users'
 import ServicesPage from './admin/ServicesPage'
-import NotFoundPage from './component/NotFoundPage'
+import NotFoundPage from './components/NotFoundPage'
 // User Orders Module
 import UserOrdersPage from './comp/orders/UserOrdersPage'
 import OrderDetailsPage from './comp/orders/OrderDetailsPage'

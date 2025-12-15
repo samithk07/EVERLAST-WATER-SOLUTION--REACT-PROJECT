@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Star, Search, ShoppingCart, Loader2, AlertCircle, Filter, TrendingUp, Shield, Zap, Battery, Droplets } from 'lucide-react';
-import Footer from '../component/Footer';
-import NavBar from '../component/NavBar'; // Fixed: Ensure filename matches
+import Footer from '../components/Footer';
+import NavBar from '../components/NavBar'; // Fixed: Ensure filename matches
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';

@@ -3,8 +3,8 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { CreditCard, Smartphone, CheckCircle, Shield, Lock, User, Package, Home, MapPin, Phone, Mail, Navigation, Globe, AlertCircle } from 'lucide-react';
-import Footer from '../component/Footer';
-import NavBar from '../component/NavBar';
+import Footer from '../components/Footer';
+import NavBar from '../components/NavBar';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 

@@ -19,6 +19,11 @@ import ProductsPageAdmin from './Admin/Products'
 import OrdersPage from './Admin/Orders'
 import UsersPage from './Admin/Users'
 import ServicesPage from './Admin/ServicesPage'
+import NotFoundPage from './Component/NotFoundPage'
+// User Orders Module
+import UserOrdersPage from './components/orders/UserOrdersPage'
+import OrderDetailsPage from './components/orders/OrderDetailsPage'
+
 
 function App() {
   return (
@@ -38,6 +43,10 @@ function App() {
             <Route path='/about' element={<About/>} />
             <Route path='/products' element={<ProductsPage/>} />
             <Route path='/checkout' element={<CheckoutPage/>} />
+            <Route path='/orders' element={<OrderDetailsPage/>} />
+            <Route path='/orders' element={<UserOrdersPage/>} />
+                    <Route path="*" element={<NotFoundPage />} />
+
             
             {/* Protected User Routes */}
             <Route path='/userpage' element={<UserPage/>} />
@@ -57,7 +66,7 @@ function App() {
               <Route path='services' element={<ServicesPage />} />
             </Route>
             
-            {/* Catch all route - redirect to home */}
+            
             <Route path='*' element={<Navigate to="/" replace />} />
           </Routes>
 

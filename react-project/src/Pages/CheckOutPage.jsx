@@ -529,7 +529,7 @@ const CheckoutPage = () => {
                 if (serverAvailable) {
                     saveSuccess = await saveOrderToDbJson(orderDetails);
                     if (saveSuccess) {
-                        toast.success('✅ Order saved to database successfully!');
+                        toast.success(' Order saved to database successfully!');
                     }
                 }
             } catch (serverError) {
@@ -539,7 +539,7 @@ const CheckoutPage = () => {
             // Always save to localStorage as backup
             const localStorageSuccess = saveOrderToLocalStorage(orderDetails);
             if (localStorageSuccess) {
-                console.log('✅ Order saved to localStorage');
+                console.log(' Order saved to localStorage');
             }
             
             // Clear the cart
@@ -549,11 +549,11 @@ const CheckoutPage = () => {
             setOrderId(newOrderId);
             setShowSuccessModal(true);
             
-            toast.success('🎉 Payment successful! Order placed.');
+            toast.success(' Payment successful! Order placed.');
             
         } catch (error) {
             console.error('Payment error:', error);
-            toast.error('❌ Payment failed. Please try again.');
+            toast.error(' Payment failed. Please try again.');
         } finally {
             setIsProcessing(false);
         }

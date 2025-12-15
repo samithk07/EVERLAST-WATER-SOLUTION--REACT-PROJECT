@@ -71,7 +71,7 @@ const ToastNotification = ({ type, message, onClose }) => {
     <div className={`fixed top-6 right-6 z-50 w-96 ${isVisible ? 'animate-slide-in' : 'animate-slide-out'}`}>
       <div className={`${config.bgColor} border rounded-xl shadow-lg p-4`}>
         <div className="flex items-start">
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             {config.icon}
           </div>
           <div className="ml-3 flex-1">
@@ -87,7 +87,7 @@ const ToastNotification = ({ type, message, onClose }) => {
               setIsVisible(false);
               setTimeout(onClose, 300);
             }}
-            className="ml-4 flex-shrink-0 text-[#393E46]/40 hover:text-[#393E46]/60 transition-colors"
+            className="ml-4 shrink-0 text-[#393E46]/40 hover:text-[#393E46]/60 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -1433,7 +1433,7 @@ Energy saving mode"
                   : 'bg-blue-50 border-blue-200'
           }`}>
             <div className="flex items-start">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 {toast.type === 'success' ? (
                   <CheckCircle className="w-5 h-5 text-green-600" />
                 ) : toast.type === 'error' ? (
@@ -1472,7 +1472,7 @@ Energy saving mode"
               </div>
               <button
                 onClick={() => removeToast(toast.id)}
-                className="ml-4 flex-shrink-0 text-[#393E46]/40 hover:text-[#393E46]/60 transition-colors"
+                className="ml-4 shrink-0 text-[#393E46]/40 hover:text-[#393E46]/60 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

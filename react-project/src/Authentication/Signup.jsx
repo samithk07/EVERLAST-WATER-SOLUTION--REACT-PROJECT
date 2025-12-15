@@ -1,5 +1,5 @@
 // components/Login.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -15,7 +15,33 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [serverError, setServerError] = useState('');
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { user, login } = useAuth();
+
+    // Redirect if user is already logged in
+    useEffect(() => {
+        if (user) {
+            // Show a message that user is already logged in
+            toast.info('You are already logged in!', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+            });
+
+            // Redirect based on user role
+            if (user.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                // Check if there's a returnToCheckout session
+                const returnToCheckout = sessionStorage.getItem('returnToCheckout');
+                if (returnToCheckout) {
+                    sessionStorage.removeItem('returnToCheckout');
+                    navigate('/checkout');
+                } else {
+                    navigate('/home');
+                }
+            }
+        }
+    }, [user, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,24 +63,41 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Double check - if user is somehow already logged in, prevent login
+        if (user) {
+            toast.error('You are already logged in!');
+            return;
+        }
+        
         const validationErrors = validateForm(formData);
 
         if (Object.keys(validationErrors).length === 0) {
             setIsLoading(true);
             setServerError('');
             try {
-                const user = await loginUser(formData);
+                const userData = await loginUser(formData);
                 
+                // Check if user is blocked
+                if (userData.status === 'blocked' || userData.blocked === true) {
+                    throw new Error('Your account has been blocked. Please contact support.');
+                }
+                
+                // Check if user is pending approval
+                if (userData.status === 'pending') {
+                    throw new Error('Your account is pending approval. Please contact administrator.');
+                }
+
                 // Login with user data
                 login({
-                    id: user.id,
-                    email: user.email,
-                    username: user.name || user.username,
-                    role: user.role || 'user' // Default to 'user' if role not specified
+                    id: userData.id,
+                    email: userData.email,
+                    username: userData.name || userData.username,
+                    role: userData.role || 'user' // Default to 'user' if role not specified
                 });
 
                 // Toastify notification for successful login
-                toast.success(`Welcome back, ${user.name || user.username || user.email}!`, {
+                toast.success(`Welcome back, ${userData.name || userData.username || userData.email}!`, {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -65,7 +108,7 @@ const Login = () => {
                 });
 
                 // Redirect based on user role
-                if (user.role === 'admin') {
+                if (userData.role === 'admin') {
                     // Redirect admin to admin dashboard
                     setTimeout(() => {
                         navigate('/admin/dashboard');
@@ -134,7 +177,14 @@ const Login = () => {
                     throw new Error('Invalid password');
                 }
 
-                return user;
+                // Check for user status field (could be 'status' or 'userStatus')
+                const userStatus = user.status || user.userStatus || 'active';
+                
+                // Return user with status included
+                return {
+                    ...user,
+                    status: userStatus
+                };
             } catch (serverError) {
                 // If JSON Server fails, try localStorage
                 console.log('JSON Server not available, trying localStorage...');
@@ -172,13 +222,17 @@ const Login = () => {
                         return;
                     }
 
+                    // Check for user status field (could be 'status' or 'userStatus')
+                    const userStatus = user.status || user.userStatus || 'active';
+                    
                     // Ensure role is set (default to 'user')
-                    const userWithRole = {
+                    const userWithStatus = {
                         ...user,
-                        role: user.role || 'user'
+                        role: user.role || 'user',
+                        status: userStatus
                     };
 
-                    resolve(userWithRole);
+                    resolve(userWithStatus);
                 })
                 .catch(() => {
                     // If db.json also fails, only use localStorage users
@@ -196,13 +250,17 @@ const Login = () => {
                         return;
                     }
 
+                    // Check for user status field
+                    const userStatus = user.status || user.userStatus || 'active';
+                    
                     // Ensure role is set (default to 'user')
-                    const userWithRole = {
+                    const userWithStatus = {
                         ...user,
-                        role: user.role || 'user'
+                        role: user.role || 'user',
+                        status: userStatus
                     };
 
-                    resolve(userWithRole);
+                    resolve(userWithStatus);
                 });
         });
     };
@@ -223,31 +281,17 @@ const Login = () => {
         return errors;
     };
 
-    // Admin demo credentials
-    const useAdminDemo = () => {
-        setFormData({
-            email: 'admin@example.com',
-            password: 'admin123'
-        });
-        toast.info('Admin demo credentials filled!', {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-        });
-    };
-
-    // User demo credentials
-    const useUserDemo = () => {
-        setFormData({
-            email: 'demo@example.com',
-            password: 'demo123'
-        });
-        toast.info('User demo credentials filled!', {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-        });
-    };
+    // If user is logged in, show a loading state while redirecting
+    if (user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">You are already logged in. Redirecting...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -272,7 +316,7 @@ const Login = () => {
                 <div className="bg-white rounded-2xl shadow-2xl shadow-blue-500/10 border border-blue-100 p-8 w-full max-w-md">
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl font-bold bg-linear-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-2">
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-2">
                             Welcome Back
                         </h2>
                         <p className="text-gray-500 text-sm">
@@ -282,13 +326,29 @@ const Login = () => {
 
                     {/* Server Error */}
                     {serverError && (
-                        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-                            {serverError}
+                        <div className={`mb-4 p-3 rounded-lg text-sm ${serverError.includes('blocked') || serverError.includes('pending') ? 'bg-yellow-100 border border-yellow-400 text-yellow-700' : 'bg-red-100 border border-red-400 text-red-700'}`}>
+                            <div className="flex items-start gap-2">
+                                {serverError.includes('blocked') || serverError.includes('pending') ? (
+                                    <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                ) : (
+                                    <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                )}
+                                <div>
+                                    {serverError}
+                                    {(serverError.includes('blocked') || serverError.includes('pending')) && (
+                                        <p className="text-xs mt-1 opacity-90">
+                                            Please contact support for assistance.
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     )}
 
-                    
-                   
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Email Field */}
                         <div className="space-y-2">
@@ -348,7 +408,7 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className={`w-full py-3 px-4 bg-linear-to-r from-blue-500 to-cyan-400 text-white font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isLoading
+                            className={`w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isLoading
                                     ? 'opacity-60 cursor-not-allowed'
                                     : 'hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5'
                                 }`}
@@ -375,14 +435,6 @@ const Login = () => {
                                 Sign up
                             </button>
                         </p>
-                        <div className="mt-4">
-                            <button
-                                onClick={() => navigate('/admin/login')}
-                                className="text-sm text-gray-600 hover:text-gray-800"
-                            >
-                                Admin Login
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>

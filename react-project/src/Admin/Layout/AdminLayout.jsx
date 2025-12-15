@@ -370,7 +370,7 @@ const AdminLayout = () => {
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-4 shrink-0">
+                {/* <div className="flex items-center space-x-4 shrink-0">
                   <div className="hidden md:block relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#393E46] dark:text-[#EEEEEE]" size={18} />
                     <input
@@ -384,7 +384,7 @@ const AdminLayout = () => {
                   <div className="w-10 h-10 rounded-full bg-[#00ADB5] flex items-center justify-center text-[#EEEEEE] font-bold text-sm shadow-md shrink-0">
                     {user?.name?.charAt(0) || 'A'}
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </header>
@@ -415,14 +415,7 @@ const AdminLayout = () => {
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-2 shrink-0">
-                    <button
-                      onClick={() => setDarkMode(!darkMode)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${darkMode ? 'bg-[#00ADB5] text-[#EEEEEE] hover:bg-[#0099a4]' : 'bg-[#393E46] text-[#EEEEEE] hover:bg-[#2d3138]'}`}
-                    >
-                      {darkMode ? 'Light Mode' : 'Dark Mode'}
-                    </button>
-                  </div>
+                  
                 </div>
               </div>
 
@@ -498,7 +491,7 @@ const AdminLayout = () => {
         }
         
         ::-webkit-scrollbar-thumb {
-          background: transparent;
+          background: tran nsparent;
         }
         
         /* Ensure smooth scrolling */

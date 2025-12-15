@@ -141,8 +141,7 @@ const ServicesPage = () => {
     }
   };
 
-  // Status badge component
-  const StatusBadge = ({ status }) => {
+  // Status badge component  const StatusBadge = ({ status }) => {
     const config = {
       pending: { color: 'bg-yellow-100 text-yellow-800', icon: <Clock size={14} /> },
       confirmed: { color: 'bg-blue-100 text-blue-800', icon: <CheckCircle size={14} /> },

@@ -12,8 +12,7 @@ const MAX_IMAGE_SIZE = 100 * 1024; // 100KB max for demo
 const COMPRESSED_MAX_WIDTH = 400;
 const COMPRESSED_QUALITY = 0.7;
 
-// Toast Notification Component
-const ToastNotification = ({ type, message, onClose }) => {
+// Toast Notification componentconst ToastNotification = ({ type, message, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -100,8 +99,7 @@ const ToastNotification = ({ type, message, onClose }) => {
   );
 };
 
-// Toast Provider Component
-const ToastProvider = ({ children }) => {
+// Toast Provider componentconst ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
   const showToast = (type, message) => {

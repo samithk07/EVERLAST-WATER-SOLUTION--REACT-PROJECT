@@ -4,7 +4,7 @@ import { ShoppingCart, User, LogOut, X, Home, Info,Package , LogIn, UserPlus, Me
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext'; // Import AuthContext
 
-const Navbar = () => {
+const NavBar = () => {
     const { getCartItemsCount } = useCart();
     const { user, isAuthenticated, logout } = useAuth(); // Use AuthContext
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -94,7 +94,7 @@ const Navbar = () => {
                 ? 'shadow-lg bg-[#00A9FF] border-b border-[#89CFF3]' 
                 : 'bg-[#00A9FF] border-b border-[#A0E9FF]'
         }`}>
-            {/* Main Navbar - Reduced width */}
+            {/* Main NavBar - Reduced width */}
             <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
                 {/* Logo and Mobile Menu */}
                 <div className="flex items-center gap-3">
@@ -317,4 +317,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
+export default NavBar;

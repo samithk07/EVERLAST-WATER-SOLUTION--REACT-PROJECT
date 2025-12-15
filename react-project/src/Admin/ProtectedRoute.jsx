@@ -1,10 +1,10 @@
-// components/AdminProtectedRoute.jsx
+// components/adminProtectedRoute.jsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const AdminProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isAdmin, loading } = useAuth();
+const adminProtectedRoute = ({ children }) => {
+  const { isAuthenticated, isadmin, loading } = useAuth();
 
   if (loading) {
     return (
@@ -19,13 +19,13 @@ const AdminProtectedRoute = ({ children }) => {
     return <Navigate to="/login" state={{ from: window.location.pathname }} />;
   }
 
-  if (!isAdmin()) {
+  if (!isadmin()) {
     // Redirect regular users to home page
-    alert('Access denied. Admin privileges required.');
+    alert('Access denied. admin privileges required.');
     return <Navigate to="/home" />;
   }
 
   return children;
 };
 
-export default AdminProtectedRoute;
+export default adminProtectedRoute;

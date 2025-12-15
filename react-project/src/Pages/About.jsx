@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Users, Award, Clock, Shield, CheckCircle, Mail, X } from 'lucide-react';
-import Footer from '../Component/Footer';
-import Navbar from '../Component/NavBar';
+import Footer from '../component/Footer';
+import NavBar from '../component/NavBar';
 
 const AboutUs = () => {
   const [selectedMember, setSelectedMember] = useState(null);
@@ -83,7 +83,7 @@ const AboutUs = () => {
 
   return (
     <>
-      <Navbar/>
+      <NavBar/>
       <div 
         className="min-h-screen bg-[#89CFF3] relative"
         style={{

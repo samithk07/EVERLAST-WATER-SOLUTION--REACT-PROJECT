@@ -3,8 +3,8 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { CreditCard, Smartphone, CheckCircle, Shield, Lock, User, Package, Home, MapPin, Phone, Mail, Navigation, Globe, AlertCircle } from 'lucide-react';
-import Footer from '../Component/Footer';
-import Navbar from '../Component/NavBar';
+import Footer from '../component/Footer';
+import NavBar from '../component/NavBar';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
@@ -649,7 +649,7 @@ const CheckoutPage = () => {
     if (loading) {
         return (
             <>
-                <Navbar />
+                <NavBar />
                 <div className="min-h-screen flex items-center justify-center pt-20" style={{ backgroundColor: colors.background }}>
                     <div className="text-center max-w-md mx-auto p-8">
                         <div className="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
@@ -671,7 +671,7 @@ const CheckoutPage = () => {
     if (cart.length === 0 && !showSuccessModal) {
         return (
             <>
-                <Navbar />
+                <NavBar />
                 <div className="min-h-screen flex items-center justify-center pt-20" style={{ backgroundColor: colors.background }}>
                     <div className="text-center max-w-md mx-auto p-8">
                         <div className="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
@@ -700,7 +700,7 @@ const CheckoutPage = () => {
     if (!user && !showSuccessModal) {
         return (
             <>
-                <Navbar />
+                <NavBar />
                 <div className="min-h-screen flex items-center justify-center pt-20" style={{ backgroundColor: colors.background }}>
                     <div className="text-center max-w-md mx-auto p-8">
                         <div className="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
@@ -731,7 +731,7 @@ const CheckoutPage = () => {
 
     return (
         <>
-            <Navbar />
+            <NavBar />
             <div className="min-h-screen pt-20" style={{ backgroundColor: colors.background }}>
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {/* User Info Banner */}

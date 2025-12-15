@@ -1,4 +1,4 @@
-// components/AdminLayout.jsx
+// components/adminLayout.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const AdminLayout = () => {
+const adminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -78,7 +78,7 @@ const AdminLayout = () => {
     if (currentPath.includes('orders')) return 'View and process orders';
     if (currentPath.includes('users')) return 'Manage user accounts';
     if (currentPath.includes('services')) return 'Manage service requests';
-    return 'Admin Panel';
+    return 'admin Panel';
   };
 
   const handleLogout = () => {
@@ -300,8 +300,8 @@ const AdminLayout = () => {
                   {user?.name?.charAt(0) || 'A'}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#EEEEEE] truncate">{user?.name || 'Admin User'}</p>
-                  <p className="text-xs text-[#00ADB5] truncate">Administrator</p>
+                  <p className="text-sm font-medium text-[#EEEEEE] truncate">{user?.name || 'admin User'}</p>
+                  <p className="text-xs text-[#00ADB5] truncate">administrator</p>
                 </div>
               </div>
             ) : (
@@ -404,7 +404,7 @@ const AdminLayout = () => {
                     <div className="hidden md:flex items-center">
                       <Database size={16} className="mr-2 text-[#00ADB5] shrink-0" />
                       <span className={`text-sm ${darkMode ? 'text-[#EEEEEE]' : 'text-[#222831]'} truncate`}>
-                        Admin Panel v1.0
+                        admin Panel v1.0
                       </span>
                     </div>
                     <div className="hidden lg:flex items-center">
@@ -503,4 +503,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default adminLayout;

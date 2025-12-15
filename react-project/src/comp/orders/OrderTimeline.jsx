@@ -78,7 +78,7 @@ const OrderTimeline = ({ timeline, currentStatus }) => {
 
   const getActorLabel = (actor) => {
     switch (actor) {
-      case 'admin': return 'Admin';
+      case 'admin': return 'admin';
       case 'system': return 'System';
       case 'user': return 'You';
       default: return 'System';

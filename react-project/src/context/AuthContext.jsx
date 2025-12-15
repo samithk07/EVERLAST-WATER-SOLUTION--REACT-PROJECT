@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     return !!(user && user.id);
   };
 
-  const isAdmin = () => {
+  const isadmin = () => {
     return !!(user && user.role === 'admin');
   };
 
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     loading,
     isAuthenticated,
-    isAdmin
+    isadmin
   };
 
   return (

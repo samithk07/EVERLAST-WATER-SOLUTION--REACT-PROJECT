@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../Component/NavBar';
+import NavBar from '../component/NavBar';
 import { TestTube, Shield, Users, CheckCircle, Phone, Award, FileText, ShoppingCart, X } from 'lucide-react';
-import Footer from '../Component/Footer';
+import Footer from '../component/Footer';
 import { useCart } from '../context/CartContext';
 
 const HomePage = () => {
@@ -220,7 +220,7 @@ Please contact the customer to schedule the water test.`;
 
     return (
         <>
-            <Navbar />
+            <NavBar />
             <div className="min-h-screen bg-white" style={{ color: colors.text }}>
 
                 {/* Popup Message */}

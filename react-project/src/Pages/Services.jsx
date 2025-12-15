@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Calendar, Droplets, X, CheckCircle } from 'lucide-react';
-import Navbar from '../Component/NavBar';
-import Footer from '../Component/Footer';
+import NavBar from '../component/NavBar';
+import Footer from '../component/Footer';
 
 const Services = () => {
   const [showBookingPopup, setShowBookingPopup] = useState(false);
@@ -146,7 +146,7 @@ const Services = () => {
 
   return (
     <>
-      <Navbar/>
+      <NavBar/>
       
       {/* Success Popup */}
       {showSuccessPopup && (

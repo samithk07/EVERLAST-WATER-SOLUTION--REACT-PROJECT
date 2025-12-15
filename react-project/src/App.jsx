@@ -2,27 +2,27 @@ import './App.css'
 import Registration from './Authentication/Registration'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Signup from './Authentication/Signup'
-import Home from './Pages/Home'
-import WaterTest from './Pages/WaterTest'
-import Services from './Pages/Services'
-import About from './Pages/About'
-import UserPage from './Pages/UserPage'
-import CartPage from './Pages/CartPage'
-import ProductsPage from './Pages/Products'
-import CheckoutPage from './Pages/CheckOutPage'
+import Home from './pages/Home'
+import WaterTest from './pages/WaterTest'
+import Services from './pages/Services'
+import About from './pages/About'
+import UserPage from './pages/UserPage'
+import CartPage from './pages/CartPage'
+import ProductsPage from './pages/Products'
+import CheckoutPage from './pages/CheckOutPage'
 import { AuthProvider } from './context/AuthContext'
-import AdminProtectedRoute from './Admin/ProtectedRoute'
-// Admin Components
-import AdminLayout from './Admin/Layout/AdminLayout'
-import DashboardPage from './Admin/Dashboard'
-import ProductsPageAdmin from './Admin/Products'
-import OrdersPage from './Admin/Orders'
-import UsersPage from './Admin/Users'
-import ServicesPage from './Admin/ServicesPage'
-import NotFoundPage from './Component/NotFoundPage'
+import adminProtectedRoute from './admin/ProtectedRoute'
+// admin Components
+import adminLayout from './admin/Layout/adminLayout'
+import DashboardPage from './admin/Dashboard'
+import ProductsPageadmin from './admin/Products'
+import OrdersPage from './admin/Orders'
+import UsersPage from './admin/Users'
+import ServicesPage from './admin/ServicesPage'
+import NotFoundPage from './component/NotFoundPage'
 // User Orders Module
-import UserOrdersPage from './components/orders/UserOrdersPage'
-import OrderDetailsPage from './components/orders/OrderDetailsPage'
+import UserOrdersPage from './comp/orders/UserOrdersPage'
+import OrderDetailsPage from './comp/orders/OrderDetailsPage'
 
 
 function App() {
@@ -52,15 +52,15 @@ function App() {
             <Route path='/userpage' element={<UserPage/>} />
             <Route path='/cart' element={<CartPage/>} />
             
-            {/* Admin Routes with Layout */}
+            {/* admin Routes with Layout */}
             <Route path='/admin' element={
-              <AdminProtectedRoute>
-                <AdminLayout />
-              </AdminProtectedRoute>
+              <adminProtectedRoute>
+                <adminLayout />
+              </adminProtectedRoute>
             }>
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path='dashboard' element={<DashboardPage />} />
-              <Route path='products' element={<ProductsPageAdmin />} />
+              <Route path='products' element={<ProductsPageadmin />} />
               <Route path='orders' element={<OrdersPage />} />
               <Route path='users' element={<UsersPage />} />
               <Route path='services' element={<ServicesPage />} />

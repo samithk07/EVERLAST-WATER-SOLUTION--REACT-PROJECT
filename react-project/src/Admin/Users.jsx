@@ -288,7 +288,7 @@ const UsersPage = () => {
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const totalpages = Math.ceil(filteredUsers.length / usersPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -296,7 +296,7 @@ const UsersPage = () => {
     switch (role?.toLowerCase()) {
       case 'admin':
         return <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium flex items-center">
-          <Shield size={12} className="mr-1" /> Admin
+          <Shield size={12} className="mr-1" /> admin
         </span>;
       case 'user':
         return <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium flex items-center">
@@ -393,7 +393,7 @@ const UsersPage = () => {
           <div className="bg-purple-50 p-4 rounded-xl border border-purple-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-purple-800">Admins</p>
+                <p className="text-sm font-medium text-purple-800">admins</p>
                 <p className="text-2xl font-bold text-purple-900 mt-2">
                   {users.filter(u => u.role?.toLowerCase() === 'admin').length}
                 </p>
@@ -435,7 +435,7 @@ const UsersPage = () => {
               className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A9FF] focus:border-transparent"
             >
               <option value="all">Users</option>
-              <option value="admin">Admin</option>
+              <option value="admin">admin</option>
              
             </select>
             
@@ -619,7 +619,7 @@ const UsersPage = () => {
                 <ChevronLeft size={20} />
               </button>
               
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+              {Array.from({ length: totalpages }, (_, i) => i + 1).map(number => (
                 <button
                   key={number}
                   onClick={() => paginate(number)}
@@ -633,8 +633,8 @@ const UsersPage = () => {
               
               <button
                 onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`p-2 rounded-lg ${currentPage === totalPages ? 'text-slate-400' : 'text-slate-700 hover:bg-slate-100'}`}
+                disabled={currentPage === totalpages}
+                className={`p-2 rounded-lg ${currentPage === totalpages ? 'text-slate-400' : 'text-slate-700 hover:bg-slate-100'}`}
               >
                 <ChevronRight size={20} />
               </button>
@@ -691,7 +691,7 @@ const UsersPage = () => {
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A9FF] focus:border-transparent"
                     >
                       <option value="user">User</option>
-                      <option value="admin">Admin</option>
+                      <option value="admin">admin</option>
                       <option value="customer">Customer</option>
                     </select>
                   </div>

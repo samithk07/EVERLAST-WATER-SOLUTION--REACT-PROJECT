@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Star, Search, ShoppingCart, Loader2, AlertCircle, Filter, TrendingUp, Shield, Zap, Battery, Droplets } from 'lucide-react';
-import Footer from '../Component/Footer';
-import Navbar from '../Component/Navbar'; // Fixed: Ensure filename matches
+import Footer from '../component/Footer';
+import NavBar from '../component/NavBar'; // Fixed: Ensure filename matches
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
@@ -471,7 +471,7 @@ const ProductsPage = () => {
     if (loading) {
         return (
             <>
-                <Navbar />
+                <NavBar />
                 <ToastContainer />
                 <div className="min-h-screen flex items-center justify-center pt-20" style={{ backgroundColor: colors.background }}>
                     <div className="text-center">
@@ -489,7 +489,7 @@ const ProductsPage = () => {
     if (error && products.length === 0) {
         return (
             <>
-                <Navbar />
+                <NavBar />
                 <ToastContainer />
                 <div className="min-h-screen flex items-center justify-center pt-20" style={{ backgroundColor: colors.background }}>
                     <div className="text-center max-w-md p-6">
@@ -512,7 +512,7 @@ const ProductsPage = () => {
 
     return (
         <>
-            <Navbar />
+            <NavBar />
             <ToastContainer 
                 position="bottom-right"
                 autoClose={3000}

@@ -3,8 +3,8 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../Component/Footer';
-import Navbar from '../Component/NavBar';
+import Footer from '../component/Footer';
+import NavBar from '../component/NavBar';
 import { toast } from 'react-toastify';
 
 const CartPage = () => {
@@ -139,7 +139,7 @@ const CartPage = () => {
     if (authLoading || cartLoading) {
         return (
             <>
-                <Navbar />
+                <NavBar />
                 <div className="min-h-screen pt-20 flex items-center justify-center" style={{ backgroundColor: colors.background }}>
                     <div className="text-center">
                         <Loader2 className="animate-spin h-12 w-12 mx-auto mb-4" style={{ color: colors.primary }} />
@@ -155,7 +155,7 @@ const CartPage = () => {
     if (userCart.length === 0) {
         return (
             <>
-                <Navbar />
+                <NavBar />
                 <div className="min-h-screen pt-20 flex items-center justify-center" style={{ backgroundColor: colors.background }}>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                         <div className="text-center">
@@ -191,7 +191,7 @@ const CartPage = () => {
 
     return (
         <>
-            <Navbar />
+            <NavBar />
             <div className="min-h-screen pt-20" style={{ backgroundColor: colors.background }}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {/* Header */}

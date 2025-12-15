@@ -1,4 +1,4 @@
-// Admin/pages/DashboardPage.jsx
+// admin/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Package, ShoppingBag, Users, IndianRupee , TrendingUp, Activity, Clock } from 'lucide-react';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Navbar from '../Component/NavBar';
-import Footer from '../Component/Footer';
+import NavBar from '../component/NavBar';
+import Footer from '../component/Footer';
 
 const TDSAdjuster = () => {
     const [tdsLevel, setTdsLevel] = useState(500);
@@ -74,7 +74,7 @@ const TDSAdjuster = () => {
 
     return (
         <>
-            <Navbar />
+            <NavBar />
             <div className="min-h-screen bg-[#CDF5FD] flex items-center justify-center px-4">
 
                 <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">

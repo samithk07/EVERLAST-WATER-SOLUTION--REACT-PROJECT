@@ -568,7 +568,7 @@ const OrderDetailsPage = () => {
     });
 
   // Pagination
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const totalpages = Math.ceil(filteredOrders.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedOrders = filteredOrders.slice(startIndex, startIndex + itemsPerPage);
 
@@ -1105,7 +1105,7 @@ const OrderDetailsPage = () => {
         </div>
 
         {/* Pagination */}
-        {totalPages > 1 && (
+        {totalpages > 1 && (
           <div className="px-6 py-4 border-t border-slate-100">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="text-sm text-slate-600">
@@ -1121,14 +1121,14 @@ const OrderDetailsPage = () => {
                   Previous
                 </button>
                 
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                {Array.from({ length: Math.min(5, totalpages) }, (_, i) => {
                   let pageNum;
-                  if (totalPages <= 5) {
+                  if (totalpages <= 5) {
                     pageNum = i + 1;
                   } else if (currentPage <= 3) {
                     pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
+                  } else if (currentPage >= totalpages - 2) {
+                    pageNum = totalpages - 4 + i;
                   } else {
                     pageNum = currentPage - 2 + i;
                   }
@@ -1149,8 +1149,8 @@ const OrderDetailsPage = () => {
                 })}
                 
                 <button
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => Math.min(totalpages, prev + 1))}
+                  disabled={currentPage === totalpages}
                   className="px-3 py-2 border border-slate-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
                 >
                   Next

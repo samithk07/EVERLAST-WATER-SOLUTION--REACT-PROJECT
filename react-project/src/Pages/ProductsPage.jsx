@@ -348,7 +348,7 @@ const ProductsPage = () => {
                 </div>
 
                 {/* Product Info */}
-                <div className="p-4 flex flex-col flex-grow">
+                <div className="p-4 flex flex-col grow">
                     {/* Category */}
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-medium text-gray-500 uppercase">
